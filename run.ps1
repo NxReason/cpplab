@@ -1,5 +1,5 @@
 param(
-  [string]$target = "triangle"
+  [string]$target = "classes"
 )
 $dir = "./build/bin/${target}"
 $exe = "${target}.exe"
@@ -9,7 +9,7 @@ if (!(Test-Path build)) { mkdir build }
 cmake -S . -B build -G "MinGW Makefiles"
 
 if ($LASTEXITCODE -eq 0) {
-  cmake --build build
+  cmake --build build --target $target
 }
 
 if ($LASTEXITCODE -eq 0) {
