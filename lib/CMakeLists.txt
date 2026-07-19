@@ -1,1 +1,2 @@
+add_subdirectory(nxtest)
 add_subdirectory(cli_output)

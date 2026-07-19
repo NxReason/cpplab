@@ -1,45 +1,48 @@
-#include <iostream>
-#include <string>
+#include "assert.h"
+#include "test.h"
+#include <vector>
 
-class Vector {
-public:
-  Vector()
-    : x{}, y{}, z{} {}
+using namespace nxtest;
 
-  int x;
-  int y;
-  int z;
+int sum(int x, int y) {
+  return x + y;
+}
 
-  void print() const {
-    std::cout << x << ", " << y << ", " << z << '\n';
-  }
-};
+void testSum() {
+  int result = sum(5, 2);
+  assert::lte(6, result);
+}
+void testSum2() {
+  int result = sum(10, 12);
+  assert::lte(31, result);
+}
 
-class Employee {
-private:
-  std::string m_name { "???" };
-  int m_id { 0 };
+void testNull() {
+  void* foo = nullptr;
+  assert::isNull(foo);
+}
 
-public:
-  Employee(std::string_view name)
-    : Employee { name, 0 } {}
-  Employee(std::string_view name, int id)
-    : m_name{ name }, m_id { id } {
-    std::cout << "Employee " << m_name << " created\n";
-  }
-  ~Employee() {
-    std::cout << "Employee " << m_name << " destroyed\n";
-  }
+void stringTest() {
+  const std::string text = "lorem ipsum dolor";
+  const std::string sub = "sum";
+  const std::string start = "lorem";
+  const std::string end = "olor";
+  assert::strContains(text, sub);
+  assert::strStarts(text, start);
+  assert::strEnds(text, end);
+}
 
-  void print() {
-    std::cout << "Employee " << m_name << ", id " << m_id << '\n';
-  }
-};
+void containerTest() {
+  std::vector<int> values{ 152, 4, 8, 15 };
+  assert::size(4, values);
+  assert::contains(values, 23);
+}
 
 int main() {
-  Employee e1 { "James" };
-  Employee e2 { "Dave", 42 };
-  auto e3 = Employee("John");
-  Employee e4("Jane");
+  test(testSum);
+  test("Failure msg", testSum2);
+  test("Null testing", testNull);
+  test("String testing", stringTest);
+  test("Container testing", containerTest);
   return 0;
 }
