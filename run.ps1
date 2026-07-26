@@ -1,5 +1,5 @@
 param(
-  [string]$target = "classes"
+  [string]$target = "sandbox"
 )
 $dir = "./build/bin/${target}"
 $exe = "${target}.exe"

@@ -1,7 +1,7 @@
-#include "Point2d.h"
+#include "ValueCategory.h"
 
 int main() {
-  point2dEx();
+  valueCategoryEx();
 
   return 0;
 }
