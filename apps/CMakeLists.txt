@@ -6,5 +6,8 @@ add_subdirectory(patterns_ex)
 add_subdirectory(classes)
 add_subdirectory(templates)
 
+# OpenGL
+add_subdirectory(learnOpenGL)
+
 # testing
 add_subdirectory(sandbox)

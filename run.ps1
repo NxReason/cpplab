@@ -1,5 +1,5 @@
 param(
-  [string]$target = "sandbox"
+  [string]$target = "learnOpenGL"
 )
 $dir = "./build/bin/${target}"
 $exe = "${target}.exe"
