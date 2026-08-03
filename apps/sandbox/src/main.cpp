@@ -1,24 +1,16 @@
-#include <string>
-#include <vector>
+#include "Vector.h"
 
-#include "nxbench.h"
+using namespace nxmath;
 
-std::vector<int> DoWork() {
-  std::vector<int> squares {};
-  for (int i = 0; i < 100000; i++) {
-    squares.push_back(i * i);
-  }
-  return squares;
+void showVectorExamples() {
+  Vector3 v { 1, 2, 0 };
+  Vector3 axis { 5, 0, 0 };
+
+  std::cout << axis.proj(v) << '\n';
 }
 
 int main() {
-  const std::string fnName { "DoWork" };
-  nxbench::measure([]() {
-    DoWork();
-  });
+  showVectorExamples();
 
-  nxbench::measure([]() {
-    DoWork();
-  });
   return 0;
 }
