@@ -7,3 +7,7 @@ VBO::VBO(const std::vector<float> vertices) {
   glBindBuffer(GL_ARRAY_BUFFER, m_id);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 }
+
+void VBO::bind() const {
+  glBindBuffer(GL_ARRAY_BUFFER, m_id);
+}

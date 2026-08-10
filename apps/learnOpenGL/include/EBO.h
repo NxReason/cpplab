@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-class VBO {
+class EBO {
 public:
-  VBO(const std::vector<float>);
+  EBO(const std::vector<unsigned int>);
   void bind() const;
 private:
   unsigned int m_id;
