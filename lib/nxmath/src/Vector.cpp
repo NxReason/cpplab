@@ -19,10 +19,19 @@ namespace nxmath {
     z = z / len;
   }
 
-  Vector3 Vector3::proj(const Vector3& to) {
-    return dot(*this, to) * to / to.length();
+  Vector3 Vector3::proj(const Vector3& to) const {
+    float toLength = to.length();
+    return dot(*this, to) * to / (toLength * toLength);
   }
 
+  Vector3 Vector3::perp(const Vector3& to) const {
+    Vector3 p = proj(to);
+    return *this - p;
+  }
+
+  /*
+  * non-class functions 
+  */
   Vector3 getNormalized(const Vector3& v) {
     float len = v.length();
     if (len == 0) return Vector3 { 1.0 };
@@ -31,6 +40,18 @@ namespace nxmath {
 
   float dot(const Vector3& left, const Vector3& right) {
     return left.x * right.x + left.y * right.y + left.z * right.z;
+  }
+
+  Vector3 cross(const Vector3& l, const Vector3& r) {
+    return Vector3(l.y * r.z - l.z * r.y, l.z * r.x - l.x * r.z, l.x * r.y - l.y * r.x);
+  }
+
+  Vector3 proj(const Vector3& from, const Vector3& to) {
+    return from.proj(to);
+  }
+
+  Vector3 perp(const Vector3& from, const Vector3& to) {
+    return from.perp(to);
   }
 
   float getAngleRad(const Vector3& left, const Vector3& right) {
@@ -51,6 +72,18 @@ namespace nxmath {
     return dot(left, right) > 0;
   }
 
+  std::array<Vector3, 3> orthogonalize(const Vector3& v1, const Vector3& v2, const Vector3& v3) {
+    auto u2 = perp(v2, v1);
+    auto u3 = perp(
+      perp(v3, v1),
+      u2
+    );
+    return std::array<Vector3, 3> { v1, u2, u3 };
+  }
+
+  /*
+  * overloads
+  */
   Vector3 operator*(const Vector3& v, float s) {
     return Vector3 { v.x * s, v.y * s, v.z * s };
   }
@@ -70,6 +103,9 @@ namespace nxmath {
 
   Vector3 operator-(const Vector3& left, const Vector3& right) {
     return Vector3 { left.x - right.x, left.y - right.y, left.z - right.z };
+  }
+  bool operator==(const Vector3& left, const Vector3& right) {
+    return left.x == right.x && left.y == right.y && left.z == right.z;
   }
 
   std::ostream& operator<<(std::ostream& out, const Vector3& v) {
