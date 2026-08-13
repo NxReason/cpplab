@@ -12,8 +12,8 @@ public:
 
   bool init();
   bool isClosed() const;
-  void readInput() const;
   void processFrame() const;
+  GLFWwindow* getWindow();
 private:
   GLFWwindow* m_win;
   int m_width, m_height;

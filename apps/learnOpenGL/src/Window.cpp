@@ -3,8 +3,6 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
 
 Window::Window(const std::string& title)
   : Window(800, 600, title) {}
@@ -32,7 +30,6 @@ bool Window::init() {
   }
 
   glViewport(0, 0, m_width, m_height);
-  glfwSetFramebufferSizeCallback(m_win, framebufferSizeCallback);
 
   return true;
 }
@@ -41,27 +38,16 @@ bool Window::isClosed() const {
   return glfwWindowShouldClose(m_win);
 }
 
-void Window::readInput() const {
-  processInput(m_win);
-}
-
 void Window::processFrame() const {
   glfwSwapBuffers(m_win);
   glfwPollEvents();
 }
 
+GLFWwindow* Window::getWindow() {
+  return m_win;
+}
+
 Window::~Window() {
   std::cout << "Window destroyed\n";
   glfwTerminate();
-}
-
-
-void framebufferSizeCallback(GLFWwindow*, int width, int height) {
-  glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, true);
-  }
 }
