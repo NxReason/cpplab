@@ -4,39 +4,13 @@
 
 #include "VBO.h"
 #include "EBO.h"
+#include "VAO.h"
 #include "Window.h"
 #include "Renderer.h"
 #include "Shader.h"
-#include "VAO.h"
+#include "Texture.h"
 
 #include <stbi_image.h>
-
-struct Texture {
-  unsigned int id;
-  int slot;
-};
-Texture addTexture(const char* filename, int slot) {
-  unsigned int texture;
-  glGenTextures(1, &texture);
-  glActiveTexture(GL_TEXTURE0 + slot);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width, height, nrChannels;
-  stbi_set_flip_vertically_on_load(true);
-  unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
-
-  auto format = nrChannels == 3 ? GL_RGB : GL_RGBA;
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  }
-  stbi_image_free(data);
-  return Texture { texture, slot };
-}
 
 int main() {
   Window window { "LearnOpenGL" };
@@ -74,8 +48,13 @@ int main() {
   vao.addAttrib<float>(2);
 
   // textures
-  auto t1 = addTexture("./assets/container.jpg", 0);
-  auto t2 = addTexture("./assets/awesomeface.png", 1);
+  Texture t1 { 0 };
+  Texture t2 { 1 };
+  TextureImage ti1 { "./assets/container.jpg" };
+  TextureImage ti2 { "./assets/awesomeface.png" };
+
+  t1.loadImage(ti1);
+  t2.loadImage(ti2);
 
   Shader vert { "./shaders/texture.vert", GL_VERTEX_SHADER };
   Shader frag { "./shaders/texture.frag", GL_FRAGMENT_SHADER };
@@ -88,11 +67,8 @@ int main() {
     window.readInput();
     renderer.clear();
 
-    // glBindTexture(GL_TEXTURE_2D, texture1);
-    glActiveTexture(t1.slot);
-    glBindTexture(GL_TEXTURE_2D, t1.id);
-    glActiveTexture(t2.slot);
-    glBindTexture(GL_TEXTURE_2D, t2.id);
+    t1.bind();
+    t2.bind();
     vao.bind();
     program.bind();
 
