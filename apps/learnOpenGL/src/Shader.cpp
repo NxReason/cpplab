@@ -1,9 +1,14 @@
+#include "Shader.h"
+#include <glad/glad.h>
+
 #include <fstream>
 #include <iostream>
-#include <glad/glad.h>
 #include <sstream>
 #include <string>
-#include "Shader.h"
+
+
+#include "glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
 
 std::string getShaderName(int type) {
   switch (type) {
@@ -27,7 +32,7 @@ Shader::Shader(const std::string& filepath, const int type) {
     shaderFile.close();
     code = shaderStream.str();
   }
-  catch (std::ifstream::failure e) {
+  catch (std::ifstream::failure& e) {
     std::cout << "ERROR::SHADER::FILE_NOT_READ\n";
   }
   const char* source = code.c_str();
@@ -82,6 +87,11 @@ void Program::setUniform<int>(const std::string& name, int value) const {
 template<>
 void Program::setUniform<float>(const std::string& name, float value) const {
   glUniform1f(glGetUniformLocation(m_id, name.c_str()), value);
+}
+template<>
+void Program::setUniform<glm::mat4>(const std::string& name, glm::mat4 trans) const {
+  auto loc = glGetUniformLocation(m_id, name.c_str());
+  glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(trans));
 }
 
 unsigned int Program::getId() const {

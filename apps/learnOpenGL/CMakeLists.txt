@@ -11,7 +11,11 @@ add_custom_target(copyShaders ALL
 add_dependencies(learnOpenGL copyShaders)
 
 target_include_directories(learnOpenGL PRIVATE
-  ${CMAKE_SOURCE_DIR}/external/stbi)
+  ${CMAKE_SOURCE_DIR}/external/stbi
+  ${CMAKE_SOURCE_DIR}/external/glm)
+
+target_include_directories(learnOpenGL PRIVATE
+  ${CMAKE_SOURCE_DIR}/external/glm)
 
 target_link_libraries(learnOpenGL PRIVATE
   glad
