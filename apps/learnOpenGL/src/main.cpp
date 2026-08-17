@@ -1,10 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <vector>
-
 #include "VBO.h"
-#include "EBO.h"
 #include "VAO.h"
 #include "Window.h"
 #include "Renderer.h"
@@ -12,7 +9,6 @@
 #include "Texture.h"
 #include "Data.h"
 #include "glm/ext/matrix_transform.hpp"
-#include "glm/ext/quaternion_geometric.hpp"
 #include "glm/trigonometric.hpp"
 
 #include <stbi_image.h>
@@ -182,7 +178,7 @@ void processInput(GLFWwindow* window) {
 
 bool firstMouse = true;
 
-void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+void mouseCallback(GLFWwindow*, double xpos, double ypos) {
   if (firstMouse) {
     lastX = xpos;
     lastY = ypos;

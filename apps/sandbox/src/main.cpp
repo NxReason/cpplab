@@ -7,19 +7,14 @@ using namespace nxmath;
 void showVectorExamples();
 
 void showMatrixExample() {
-  Matrix<4, 4> m1 {{
-    { 1, 0, 0, 0 },
-    { 0, 1, 0, 0 },
-    { 0, 0, 1, 0 },
-    { 0, 0, 0, 1 }
+  Matrix<3, 4> m {{
+    { 2, 1, 3, 0 },
+    { 0, 1, -1, 0 },
+    { 1, 3, -1, 0 }
   }};
-  std::cout << m1;
 
-  Matrix<3, 3> m2;
-  std::cout << m2;
-
-  auto m3 = identityMat<4>();
-  std::cout << m3;
+  auto sol = linearSystem(m);
+  std::cout << sol;
 }
 
 int main() {
