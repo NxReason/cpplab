@@ -1,10 +1,13 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <ostream>
 #include <utility>
+
+#include "Vector.h"
 
 namespace nxmath {
 
@@ -33,6 +36,9 @@ public:
     }
   }
 
+  /*
+  * Transpose
+  */
   Matrix<Cols, Rows> transpose() const {
     Matrix<Cols, Rows> out;
     for (size_t i = 0; i < Rows; ++i) {
@@ -51,6 +57,105 @@ public:
         std::swap((*this)(r, c), (*this)(c, r));
       }
     }
+  }
+
+  /*
+  * Inverse
+  */
+  auto inverse() const requires(Rows == Cols) {
+    // construct n*2n matrix with half copy + half identity
+    Matrix<Rows, 2 * Rows> n2n{};
+    for (size_t r = 0; r < Rows; ++r) {
+      for (size_t c = 0; c < Cols; ++c) {
+        n2n(r, c) = (*this)(r, c);
+      }
+      for (size_t c = 0; c < Cols; ++c) {
+        if (r == c) n2n(r, c + Cols) = 1;
+        else n2n(r, c + Cols) = 0;
+      }
+    }
+
+    for (size_t c = 0; c < Cols; ++c) {
+      // find the row with max value at column "c"
+      float max = std::abs(n2n(c, c));
+      size_t max_i = c;
+      for (size_t r = c; r < Rows; ++r) {
+        if (std::abs(n2n(r, c)) > max) {
+          max = n2n(r, c);
+          max_i = r;
+        }
+      }
+      assert(max != 0);
+
+      // swap the rows with the max value to the current one
+      if (max_i != c) {
+        n2n.swapRows(c, max_i);
+      }
+
+      // divide row by max value (sets current r,c = 1)
+      size_t curRow = c;
+      for (size_t col = 0; col < Cols * 2; ++col) {
+        n2n(curRow, col) /= max;
+      }
+
+      // clear the rest of the column to 0
+      for (size_t row = 0; row < Rows; ++row) {
+        if (row == c) continue;
+        float mult = -n2n(row, c);
+        for (size_t col = 0; col < 2 * Cols; ++col) {
+
+          n2n(row, col) += mult * n2n(c, col);
+        }
+      }
+    }
+
+    // construct output matrix from the right side of n2n
+    Matrix<Rows, Cols> out{};
+    for (size_t row = 0; row < Rows; ++row) {
+      for (size_t col = 0; col < Cols; ++col) {
+        out(row, col) = n2n(row, col + Cols);
+      }
+    }
+    return out;
+  }
+
+  /*
+  * Determinant
+  */
+  float determinant() const requires(Rows == Cols) {
+    Matrix temp { *this };
+    float det = 1.0f;
+    constexpr float epsilon = 1e-6f;
+
+    for (size_t col = 0; col < Cols; ++col) {
+      // find pivot
+      size_t pivot = col;
+      for (size_t rp = col + 1; rp < Rows; ++rp) {
+        if (std::abs(temp(rp, col)) > std::abs(temp(pivot, col))) pivot = rp;
+      }
+
+      // matrix is singular
+      if (std::abs(temp(pivot, col)) < epsilon) return 0.0f;
+
+      // swap rows if necessary
+      if (pivot != col) {
+        temp.swapRows(col, pivot);
+        det = -det;
+      }
+
+      // eliminate below pivot
+      const float p = temp(col, col);
+      for (size_t er = col + 1; er < Rows; ++er) {
+        const float factor = temp(er, col) / p;
+        for (size_t ec = col + 1; ec < Cols; ++ec) {
+          temp(er, ec) -= factor * temp(col, ec);
+        }
+      }
+
+      det *= p;
+    }
+
+    return det;
   }
 
   // utility
@@ -86,6 +191,12 @@ public:
     return count;
   }
 
+  size_t getRowsNum() const {
+    return Rows;
+  }
+  size_t getColsNum() const {
+    return Cols;
+  }
   std::pair<size_t, size_t> getShape() const {
     return std::pair{ Rows, Cols };
   }
@@ -98,8 +209,10 @@ public:
   }
 private:
   std::array<float, Rows * Cols> data {};
-  const size_t count = Rows * Cols;
+  size_t count = Rows * Cols;
 };
+
+typedef Matrix<4, 4> Mat4;
 
 template<int Dim>
 Matrix<Dim, Dim> identityMat() {
@@ -164,6 +277,21 @@ Matrix<RL, CR> operator*(Matrix<RL, CL> left, Matrix<RR, CR> right) {
 }
 
 /*
+* Vector multiplication
+*/
+Vector3 operator*(Mat4 m, Vector3 v);
+
+/*
+* Transformations
+*/
+Mat4 scale(float x, float y, float z = 1.0f);
+Mat4 scale(float value);
+Mat4 translate(float x, float y, float z = 1.0f);
+Mat4 rotateX(float angleRad);
+Mat4 rotateY(float angleRad);
+Mat4 rotateZ(float angleRad);
+
+/*
 * Linear system
 */
 template <size_t R, size_t C>
@@ -203,6 +331,9 @@ Matrix<R, C> linearSystem(const Matrix<R, C>& m) {
 }
 
 
+/*
+* Print to std::cout 
+*/
 template<size_t Rows, size_t Cols>
 std::ostream& operator<<(std::ostream& out, const Matrix<Rows, Cols> m) {
   out << "Matrix [\n";
@@ -217,5 +348,4 @@ std::ostream& operator<<(std::ostream& out, const Matrix<Rows, Cols> m) {
   return out;
 }
 
-typedef Matrix<4, 4> Mat4;
 }

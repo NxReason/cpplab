@@ -5,20 +5,22 @@
 using namespace nxmath;
 
 void showVectorExamples();
+void showMatrixExample();
 
-void showMatrixExample() {
-  Matrix<3, 4> m {{
-    { 2, 1, 3, 0 },
-    { 0, 1, -1, 0 },
-    { 1, 3, -1, 0 }
-  }};
+void transforms() {
+  auto t = translate(2, -1, 0);
+  auto r = rotateZ(3.1415 / 2);
+  auto s = scale(2);
+  
+  Vector3 pos { 1, 1, 0 };
 
-  auto sol = linearSystem(m);
-  std::cout << sol;
+  auto model = t * r * s;
+  std::cout << model;
+  std::cout << model * pos << '\n';
 }
 
 int main() {
-  showMatrixExample();
+  transforms();
 
   return 0;
 }
@@ -55,4 +57,16 @@ void showVectorExamples() {
     a3 - a1
   ).length());
   std::cout << "area " << area << '\n';
+} 
+
+void showMatrixExample() {
+  Matrix m {{
+    { 1, 2, 0, 1 },
+    { 0, 1, 3, 2 },
+    { 2, 0, 1, 1 },
+    { 1, 1, 0, 2 },
+  }};
+
+  auto i = m.inverse();
+  std::cout << i * m;
 }
