@@ -7,9 +7,10 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+const int SIDEBAR_WIDTH = 300;
 
 void framebuffer_size_callback(GLFWwindow*, int width, int height) {
-  glViewport(0, 0, width, height);
+  glViewport(SIDEBAR_WIDTH, 0, width - SIDEBAR_WIDTH, height);
 }
 
 GLFWwindow* createWindow(int width, int height, const char* title) {
@@ -104,18 +105,23 @@ GLuint createShaderProgram() {
 }
 
 int main() {
-  GLFWwindow* window = createWindow(800, 600, "Triangle");
+  GLFWwindow* window = createWindow(800 + SIDEBAR_WIDTH, 600, "Triangle");
   if (!window) return -1;
+  glViewport(SIDEBAR_WIDTH, 0, 800, 600);
 
+  // UI
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
   ImGuiIO& io = ImGui::GetIO();
-  (void)io;
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+  // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  ImGui::StyleColorsDark();
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
+  // app data
   float vertices[] = {
      0.0f,  0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f,
@@ -138,6 +144,17 @@ int main() {
 
   GLuint shader = createShaderProgram();
 
+  auto saveFunc = []() {
+    std::cout << "saving" << std::endl;
+  };
+  char buf[32];
+  float f = 0.0f;
+
+  glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+  auto imGuiWindowFlags = 
+    ImGuiWindowFlags_NoMove | 
+    ImGuiWindowFlags_NoResize |
+    ImGuiWindowFlags_NoCollapse;
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
@@ -145,12 +162,23 @@ int main() {
     ImGui_ImplGlfw_NewFrame();
 
     ImGui::NewFrame();
-    ImGui::Begin("Hello");
-    ImGui::Text("Hello ImGui");
+    // ImGui::DockSpaceOverViewport(
+    //   0,
+    //   ImGui::GetMainViewport(),
+    //   ImGuiDockNodeFlags_PassthruCentralNode
+    // );
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(300, ImGui::GetIO().DisplaySize.y));
+
+    ImGui::Begin("Scene", nullptr, imGuiWindowFlags);
+    if (ImGui::Button("Save")) {
+      saveFunc();
+    }
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::InputText("string", buf, IM_COUNTOF(buf));
     ImGui::End();
 
-    glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader);
     glad_glBindVertexArray(VAO);
@@ -159,6 +187,10 @@ int main() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    //   ImGui::UpdatePlatformWindows();
+    //   ImGui::RenderPlatformWindowsDefault();
+    // }
 
     glfwSwapBuffers(window);
   }

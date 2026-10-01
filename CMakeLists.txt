@@ -12,6 +12,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/Compiler.cmake)
 add_subdirectory(external/glad)
 add_subdirectory(external/glfw)
 add_subdirectory(external/imgui)
+add_subdirectory(external/imgui_dock)
 add_subdirectory(external/glm)
 
 add_subdirectory(apps)
