@@ -1,31 +1,29 @@
 #include "Renderer.h"
+#include "Scenes.h"
+#include "sprites/Triangle.h"
 
 #include <glad/glad.h>
 
 Renderer::Renderer() {
-  float vertices[] = {
-     0.0f,  0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f
-  };
+  // Triangle triangle;
+  // auto coords = triangle.getCoords();
+  // auto layout = triangle.getAttributeLayout();
 
-  glGenVertexArrays(1, &vao);
-  glGenBuffers(1, &vbo);
+  // vao.bind();
 
-  glBindVertexArray(vao);
+  // vbo.bind();
+  // vbo.data(coords);
 
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  // vao.setAttributeLayout(layout);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-  glEnableVertexAttribArray(0);
-
-  shader = createShaderProgram();
+  Shader vert { GL_VERTEX_SHADER, "./shaders/default.vert" };
+  Shader frag { GL_FRAGMENT_SHADER, "./shaders/default.frag" };
+  program.create(vert, frag);
 }
 
 Renderer::~Renderer() {
-  glDeleteVertexArrays(1, &vao);
-  glDeleteBuffers(1, &vbo);
+  // glDeleteVertexArrays(1, &vao);
+  // glDeleteBuffers(1, &vbo);
 }
 
 void Renderer::setClearColor() {
@@ -33,12 +31,41 @@ void Renderer::setClearColor() {
 }
 
 void Renderer::render() {
+  // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // program.use();
+  // vao.bind();
+
+  // glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void Renderer::render(TriangleScene) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(shader);
-  glad_glBindVertexArray(vao);
+  program.use();
+  for (auto vao : vaos) {
+    vao.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }
+}
 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+void Renderer::genBuffers(TriangleScene scene) {
+  auto triangles = scene.getTriangles();
+  for (auto triangle : triangles) {
+    auto coords = triangle.getCoords();
+    auto layout = triangle.getAttributeLayout();
+    VAO vao;
+    VBO vbo;
+
+    vao.bind();
+
+    vbo.bind();
+    vbo.data(coords);
+
+    vao.setAttributeLayout(layout);
+    vbos.push_back(vbo);
+    vaos.push_back(vao);
+  }
 }
 
 void Renderer::setViewport(Viewport viewport) {

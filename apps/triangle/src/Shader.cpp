@@ -1,10 +1,29 @@
 #include "Shader.h"
+#include <fstream>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
-GLuint createShader(GLenum type, const char* source) {
+
+Shader::Shader(int type, const char* filepath)
+  : type { type } {
+  std::ifstream file(filepath);
+  if (!file.is_open()) {
+    throw std::runtime_error("Failed to open shader");
+  }
+
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+
+  source = buffer.str();
+  file.close();
+}
+
+unsigned int Shader::create() {
   GLuint shader = glCreateShader(type);
 
-  glShaderSource(shader, 1, &source, nullptr);
+  auto shader_str = source.c_str();
+  glShaderSource(shader, 1, &shader_str, nullptr);
   glCompileShader(shader);
 
   int success;
@@ -17,40 +36,30 @@ GLuint createShader(GLenum type, const char* source) {
   return shader;
 }
 
-GLuint createShaderProgram() {
-  const char* fragmentShader =
-    R"(
-    #version 330 core
+// PROGRAM
+ShaderProgram::ShaderProgram() {
+  id = glCreateProgram();
+}
 
-    out vec4 FragColor;
+ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment) {
+  id = glCreateProgram();
 
-    void main() {
-      FragColor = vec4(0.2, 0.7, 1.0, 1.0);
-    }
-    )";
-  const char* vertexShader =
-    R"(
-    #version 330 core
+  create(vertex, fragment);
+}
 
-    layout(location = 0) in vec3 aPos;
+void ShaderProgram::create(Shader& vertex, Shader& fragment) {
+  auto vertexId = vertex.create();
+  auto fragmentId = fragment.create();
 
-    void main() {
-      gl_Position = vec4(aPos, 1.0);
-    }
-    )";
+  glAttachShader(id, vertexId);
+  glAttachShader(id, fragmentId);
 
-  GLuint vertex = createShader(GL_VERTEX_SHADER, vertexShader);
-  GLuint fragment = createShader(GL_FRAGMENT_SHADER, fragmentShader);
+  glLinkProgram(id);
 
-  GLuint program = glCreateProgram();
+  glDeleteShader(vertexId);
+  glDeleteShader(fragmentId);
+}
 
-  glAttachShader(program, vertex);
-  glAttachShader(program, fragment);
-
-  glLinkProgram(program);
-
-  glDeleteShader(vertex);
-  glDeleteShader(fragment);
-
-  return program;
+void ShaderProgram::use() {
+  glUseProgram(id);
 }

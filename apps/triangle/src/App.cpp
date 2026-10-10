@@ -1,20 +1,29 @@
 #include "App.h"
+#include "Scenes.h"
 
 #include <glad/glad.h>
 
 App::App()
-  : window { 1440, 800 }, ui { window } {
-}
+  : window { 1440, 800 }, ui { window } { }
 
 void App::run() {
+  // TODO:
+  // IBO
+  // Rectangle
+  // Colors (shader + update sprite class)
+  // Textures (shader + update sprite class)
+  // Scene manager
+  TriangleScene triangleScene;
   renderer.setClearColor();
+  renderer.genBuffers(triangleScene);
+
   while (!window.shouldClose()) {
     window.pollEvents();
     ui.newFrame();
     ui.draw();
 
     renderer.setViewport(calculateViewport());
-    renderer.render();
+    renderer.render(triangleScene);
 
     ui.render();
     window.swapBuffers();

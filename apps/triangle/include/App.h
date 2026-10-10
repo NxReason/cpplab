@@ -1,7 +1,8 @@
 #pragma once
 
+#include "SceneManager.h"
 #include "Window.h"
-#include "UI.h"
+#include "EditorUI.h"
 #include "Renderer.h"
 
 class App {
@@ -11,7 +12,8 @@ public:
 private:
   Window window;
   Renderer renderer;
-  UI ui;
+  EditorUI ui;
+  SceneManager sceneManager;
 
   Viewport calculateViewport() const;
 };

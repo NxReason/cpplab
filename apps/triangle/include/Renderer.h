@@ -1,7 +1,16 @@
 #pragma once
 
+#include "Scenes.h"
+#include "Graphics.h"
 #include "Shader.h"
-#include "Viewport.h"
+#include <vector>
+
+struct Viewport {
+  int x;
+  int y;
+  int width;
+  int height;
+};
 
 class Renderer {
 public:
@@ -9,10 +18,12 @@ public:
   ~Renderer();
   void setClearColor();
   void render();
+  void render(TriangleScene scene);
   void setViewport(Viewport size);
+  void genBuffers(TriangleScene scene);
 
 private:
-  GLuint shader;
-  GLuint vbo;
-  GLuint vao;
+  std::vector<VBO> vbos;
+  std::vector<VAO> vaos;
+  ShaderProgram program;
 };

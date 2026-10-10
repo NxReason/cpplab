@@ -1,9 +1,7 @@
-#include "UI.h"
+#include "EditorUI.h"
 #include "imgui.h"
 
-#include <iostream>
-
-UI::UI(const Window& window) {
+EditorUI::EditorUI(const Window& window) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -15,13 +13,13 @@ UI::UI(const Window& window) {
   ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-UI::~UI() {
+EditorUI::~EditorUI() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
 
-void UI::newFrame() {
+void EditorUI::newFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
 
@@ -31,30 +29,41 @@ void UI::newFrame() {
   ImGui::SetNextWindowSizeConstraints(ImVec2(200, height), ImVec2(600, height));
 }
 
-void UI::draw() {
+void EditorUI::draw() {
   ImGui::Begin("Scene", nullptr, imGuiWindowFlags);
-  if (ImGui::Button("Save")) {
-    saveFunc();
-  }
 
-  const char* scenes[] = { "Triangle", "Square" };
-  static int itemCurrent = 0;
-  ImGui::Combo("Scenes", &itemCurrent, scenes, IM_COUNTOF(scenes));
+  drawSceneCombo();
 
   width = ImGui::GetWindowWidth();
   ImGui::End();
 }
 
-void UI::render() {
+void EditorUI::drawSceneCombo() {
+  if (scenes.size() == 0) {
+    ImGui::Text("No scenes");
+    return;
+  }
+
+  auto comboPreview = scenes[currentScene];
+  if (ImGui::BeginCombo("Scenes", comboPreview.c_str())) {
+    for (size_t n = 0; n < scenes.size(); ++n) {
+      const bool isSelected = (currentScene == n);
+      if (ImGui::Selectable(scenes[n].c_str(), isSelected)) {
+        currentScene = n;
+      }
+      if (isSelected) {
+        ImGui::SetItemDefaultFocus();
+      }
+    }
+    ImGui::EndCombo();
+  }
+}
+
+void EditorUI::render() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-float UI::getWidth() const {
+float EditorUI::getWidth() const {
   return width;
-}
-
-void UI::saveFunc() {
-  std::cout << "saving" << std::endl;
-  std::cout << width << std::endl;
 }
