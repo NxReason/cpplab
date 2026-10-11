@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <string>
+#include <unordered_map>
 
 class Shader {
 public:
@@ -21,4 +22,13 @@ public:
   void use();
 private:
   unsigned int id;
+};
+
+class ShaderManager {
+private:
+  std::unordered_map<std::string, ShaderProgram> shaders;
+
+public:
+  ShaderManager();
+  ShaderProgram getShader(const std::string& shaderName) const;
 };

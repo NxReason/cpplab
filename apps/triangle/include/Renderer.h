@@ -1,9 +1,8 @@
 #pragma once
 
+#include "ResourceManager.h"
 #include "Scenes.h"
-#include "Graphics.h"
 #include "Shader.h"
-#include <vector>
 
 struct Viewport {
   int x;
@@ -17,13 +16,11 @@ public:
   Renderer();
   ~Renderer();
   void setClearColor();
-  void render();
   void render(TriangleScene scene);
   void setViewport(Viewport size);
-  void genBuffers(TriangleScene scene);
 
+  void generateResources(TriangleScene scene);
 private:
-  std::vector<VBO> vbos;
-  std::vector<VAO> vaos;
-  ShaderProgram program;
+  ResourceManager resourceManager;
+  ShaderManager shaderManager;
 };

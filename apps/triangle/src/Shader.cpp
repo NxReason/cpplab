@@ -63,3 +63,18 @@ void ShaderProgram::create(Shader& vertex, Shader& fragment) {
 void ShaderProgram::use() {
   glUseProgram(id);
 }
+
+// MANAGER
+ShaderManager::ShaderManager() {
+  auto vertShader = Shader(GL_VERTEX_SHADER, "./shaders/default.vert");
+  auto fragShader = Shader(GL_FRAGMENT_SHADER, "./shaders/default.frag");
+  auto program = ShaderProgram(vertShader, fragShader);
+  shaders["default"] = program;
+}
+
+ShaderProgram ShaderManager::getShader(const std::string& shaderName) const {
+  if(shaders.contains(shaderName)) {
+    return shaders.at(shaderName);
+  }
+  return shaders.at("default");
+}

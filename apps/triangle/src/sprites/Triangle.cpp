@@ -1,5 +1,4 @@
 #include "sprites/Triangle.h"
-#include "Graphics.h"
 
 Triangle::Triangle() {
   // a
@@ -35,7 +34,6 @@ std::vector<float> Triangle::getCoords() const {
   return coords;
 }
 
-std::vector<VertexAttribute> Triangle::getAttributeLayout() const {
-  std::vector<VertexAttribute> layout { VertexAttribute { .size = 3, .type = GL_FLOAT} };
-  return layout;
+int Triangle::getVertexCount() const {
+  return 3;
 }

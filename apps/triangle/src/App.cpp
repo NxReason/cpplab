@@ -10,12 +10,13 @@ void App::run() {
   // TODO:
   // IBO
   // Rectangle
+  // Uniforms
   // Colors (shader + update sprite class)
   // Textures (shader + update sprite class)
   // Scene manager
   TriangleScene triangleScene;
   renderer.setClearColor();
-  renderer.genBuffers(triangleScene);
+  renderer.generateResources(triangleScene);
 
   while (!window.shouldClose()) {
     window.pollEvents();
