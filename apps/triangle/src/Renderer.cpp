@@ -21,6 +21,7 @@ void Renderer::render(IScene* scene) {
   for (auto& sprite : sprites) {
     ShaderProgram program = shaderManager.getShader(sprite->shaderName);
     program.use();
+    program.setUniforms(sprite->uniforms);
 
     Mesh mesh = resourceManager.getMesh(sprite->meshName);
     mesh.vao.bind();

@@ -8,6 +8,7 @@ Vector3 colorStrToFloat(const std::string& hex) {
   };
 }
 
+// VAO
 ColorTriangle::ColorTriangle(Vector3 a, Vector3 b, Vector3 c)
   : a { a }, b { b }, c { c } {
   colorHex = "BADA55";
@@ -40,4 +41,39 @@ std::vector<VertexAttribute> ColorTriangle::getVAOLayout() const {
 
 void ColorTriangle::setColor(const std::string& hex) {
   colorHex = hex;
+}
+
+// Uniform
+ColorTriangleUni::ColorTriangleUni(Vector3 a, Vector3 b, Vector3 c)
+  : a { a }, b { b }, c { c } {
+  colorHex = "BADA55";
+  shaderName = "colored_uni";
+  uniforms["userColor"] = colorStrToFloat(colorHex);
+}
+
+std::vector<float> ColorTriangleUni::getCoords() const {
+  return {
+    a.x, a.y, a.z,
+    b.x, b.y, b.z,
+    c.x, c.y, c.z,
+  };
+}
+
+std::vector<unsigned int> ColorTriangleUni::getIndices() const {
+  return std::vector<unsigned int> { 0, 1, 2 };
+}
+
+int ColorTriangleUni::getVertexCount() const {
+  return 3;
+}
+
+std::vector<VertexAttribute> ColorTriangleUni::getVAOLayout() const {
+  return {
+    { 3, GL_FLOAT },
+  };
+}
+
+void ColorTriangleUni::setColor(const std::string& hex) {
+  colorHex = hex;
+  uniforms["userColor"] = colorStrToFloat(hex);
 }

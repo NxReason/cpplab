@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "Vector.h"
+
 class Shader {
 public:
   Shader(int type, const char* filepath);
@@ -20,6 +22,9 @@ public:
 
   void create(Shader& vertex, Shader& fragment);
   void use();
+
+  void setUniforms(std::unordered_map<std::string, nxmath::Vector3> unis);
+  void setUniform(const std::string& name, nxmath::Vector3 value);
 private:
   unsigned int id;
 };

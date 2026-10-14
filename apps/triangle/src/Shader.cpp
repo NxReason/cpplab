@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <unordered_map>
 
 
 Shader::Shader(int type, const char* filepath)
@@ -64,6 +66,17 @@ void ShaderProgram::use() {
   glUseProgram(id);
 }
 
+void ShaderProgram::setUniforms(std::unordered_map<std::string, nxmath::Vector3> unis) {
+  for (const auto& uniform : unis) {
+    setUniform(uniform.first, uniform.second);
+  }
+}
+
+void ShaderProgram::setUniform(const std::string& name, const nxmath::Vector3 val) {
+  int location = glGetUniformLocation(id, name.c_str());
+  glUniform3f(location, val.x, val.y, val.z);
+}
+
 // MANAGER
 ShaderManager::ShaderManager() {
   auto vertShader = Shader(GL_VERTEX_SHADER, "./shaders/default.vert");
@@ -75,6 +88,11 @@ ShaderManager::ShaderManager() {
   auto coloredFrag = Shader(GL_FRAGMENT_SHADER, "./shaders/colored.frag");
   auto coloredProgram = ShaderProgram(coloredVert, coloredFrag);
   shaders["colored"] = coloredProgram;
+
+  auto coloredUniVert = Shader(GL_VERTEX_SHADER, "./shaders/colored_uni.vert");
+  auto coloredUniFrag = Shader(GL_FRAGMENT_SHADER, "./shaders/colored_uni.frag");
+  auto coloredUniProgram = ShaderProgram(coloredUniVert, coloredUniFrag);
+  shaders["colored_uni"] = coloredUniProgram;
 }
 
 ShaderProgram ShaderManager::getShader(const std::string& shaderName) const {
