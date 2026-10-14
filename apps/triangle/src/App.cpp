@@ -58,4 +58,11 @@ void App::updateCurrentScene() {
     currentScene = sceneManager.get(currentSceneName);
     renderer.generateResources(currentScene);
   }
+
+  static bool isPoly = false;
+  bool uiIsPoly = ui.getIsPolygon();
+  if (isPoly != uiIsPoly) {
+    isPoly = uiIsPoly;
+    renderer.setPolygonMode(isPoly);
+  }
 }

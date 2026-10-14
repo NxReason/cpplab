@@ -1,9 +1,9 @@
 #include "Scene.h"
 
 SceneManager::SceneManager() {
-  defaultScene = "Basic Triangle";
-  scenes["Basic Triangle"] = new TriangleScene;
-  scenes["Square No IBO"] = new SquareScene;
+  defaultScene = "1. Basic Triangle";
+  scenes["1. Basic Triangle"] = new TriangleScene;
+  scenes["2. Basic Square"] = new SquareScene;
 }
 
 void SceneManager::add(const std::string& name, IScene* scene) {

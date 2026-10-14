@@ -25,7 +25,8 @@ void Renderer::render(IScene* scene) {
     Mesh mesh = resourceManager.getMesh(sprite->meshName);
     mesh.vao.bind();
 
-    glDrawArrays(GL_TRIANGLES, 0, sprite->getVertexCount());
+    // glDrawArrays(GL_TRIANGLES, 0, sprite->getVertexCount());
+    glDrawElements(GL_TRIANGLES, sprite->getVertexCount(), GL_UNSIGNED_INT, 0);
   }
 }
 
@@ -36,4 +37,8 @@ void Renderer::generateResources(IScene* scene) {
 
 void Renderer::setViewport(const Viewport& viewport) {
   glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+}
+
+void Renderer::setPolygonMode(bool isOn) {
+  glPolygonMode(GL_FRONT_AND_BACK, isOn ? GL_LINE : GL_FILL);
 }

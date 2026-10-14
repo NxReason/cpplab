@@ -13,6 +13,15 @@ private:
   unsigned int id;
 };
 
+class EBO {
+public:
+  EBO();
+  void bind();
+  void data(std::vector<unsigned int> indices);
+private:
+  unsigned int id;
+};
+
 struct VertexAttribute {
   int size;
   int type;

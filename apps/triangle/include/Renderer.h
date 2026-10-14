@@ -18,6 +18,7 @@ public:
   void setClearColor();
   void render(IScene* scene);
   void setViewport(const Viewport& size);
+  void setPolygonMode(bool isOn);
 
   void generateResources(IScene* scene);
 private:

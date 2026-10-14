@@ -9,5 +9,6 @@ public:
   int meshName {};
 
   virtual std::vector<float> getCoords() const = 0;
+  virtual std::vector<unsigned int> getIndices() const = 0;
   virtual int getVertexCount() const = 0;
 };

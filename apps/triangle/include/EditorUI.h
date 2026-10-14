@@ -20,6 +20,8 @@ public:
   void setScenes(const std::vector<std::string>& names, size_t current = 0);
   size_t getCurrentSceneIndex() const;
   std::string getCurrentSceneName() const;
+
+  bool getIsPolygon() const;
 private:
   float width {};
   const int imGuiWindowFlags = 
@@ -29,5 +31,8 @@ private:
   std::vector<std::string> scenes = {};
   size_t currentScene = 0;
 
+  bool isPolygon = false;
+
   void drawSceneCombo();
+  void drawPolygonCheckbox();
 };

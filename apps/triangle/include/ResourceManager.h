@@ -7,6 +7,7 @@
 struct Mesh {
   VAO vao;
   VBO vbo;
+  EBO ebo;
 };
 
 class ResourceManager {

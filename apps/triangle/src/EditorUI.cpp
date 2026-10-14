@@ -33,6 +33,7 @@ void EditorUI::draw() {
   ImGui::Begin("Scene", nullptr, imGuiWindowFlags);
 
   drawSceneCombo();
+  drawPolygonCheckbox();
 
   width = ImGui::GetWindowWidth();
   ImGui::End();
@@ -59,6 +60,10 @@ void EditorUI::drawSceneCombo() {
   }
 }
 
+void EditorUI::drawPolygonCheckbox() {
+  ImGui::Checkbox("Polygon mode", &isPolygon);
+}
+
 void EditorUI::render() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -79,4 +84,8 @@ size_t EditorUI::getCurrentSceneIndex() const {
 
 std::string EditorUI::getCurrentSceneName() const {
   return scenes[currentScene];
+}
+
+bool EditorUI::getIsPolygon() const {
+  return isPolygon;
 }
