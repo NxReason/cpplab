@@ -3,12 +3,14 @@
 #include <vector>
 
 #include "ISprite.h"
-#include "NxMath.h"
+#include "Vector.h"
+
+using nxmath::Vector3;
 
 class Triangle : public ISprite {
 public:
   Triangle();
-  Triangle(Vector2 a, Vector2 b, Vector2 c);
+  Triangle(Vector3 a, Vector3 b, Vector3 c);
 
   std::vector<float> getCoords() const override;
   int getVertexCount() const override;

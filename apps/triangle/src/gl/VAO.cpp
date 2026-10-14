@@ -17,12 +17,12 @@ void VAO::setAttributeLayout(const std::vector<VertexAttribute>& layout) {
   }
 
   int index = 0;
-  long long pad = 0;
+  long long offset = 0;
   for (const auto& attrib : layout) {
-    glVertexAttribPointer(index, attrib.size, attrib.type, GL_FALSE, stride, (void*)pad);
+    glVertexAttribPointer(index, attrib.size, attrib.type, GL_FALSE, stride, (void*)offset);
     glEnableVertexAttribArray(index);
     index++;
     // TODO: change float to actual type
-    pad += attrib.size * sizeof(float);
+    offset += attrib.size * sizeof(float);
   }
 }

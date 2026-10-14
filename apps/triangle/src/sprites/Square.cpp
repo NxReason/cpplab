@@ -1,6 +1,6 @@
 #include "sprites/Square.h"
 
-Square::Square(Vector2 pos, float sideWidth)
+Square::Square(Vector3 pos, float sideWidth)
   : pos { pos }, sideWidth { sideWidth } { }
 
 

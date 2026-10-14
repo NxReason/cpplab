@@ -6,6 +6,7 @@
 App::App()
   : window { 1440, 800 }, ui { window } { }
 
+
 void App::run() {
   // TODO:
   // IBO

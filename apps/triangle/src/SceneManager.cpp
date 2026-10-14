@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 SceneManager::SceneManager() {
-  defaultScene = "Square No IBO";
+  defaultScene = "Basic Triangle";
   scenes["Basic Triangle"] = new TriangleScene;
   scenes["Square No IBO"] = new SquareScene;
 }

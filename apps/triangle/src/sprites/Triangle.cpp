@@ -15,7 +15,7 @@ Triangle::Triangle() {
   coords.push_back(0.0);
 }
 
-Triangle::Triangle(Vector2 a, Vector2 b, Vector2 c) {
+Triangle::Triangle(Vector3 a, Vector3 b, Vector3 c) {
   // a
   coords.push_back(a.x);
   coords.push_back(a.y);
