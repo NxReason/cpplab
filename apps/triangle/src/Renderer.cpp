@@ -1,5 +1,4 @@
 #include "Renderer.h"
-#include "Scenes.h"
 
 #include <glad/glad.h>
 
@@ -15,10 +14,10 @@ void Renderer::setClearColor() {
 }
 
 
-void Renderer::render(TriangleScene scene) {
+void Renderer::render(IScene* scene) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  auto sprites = scene.getSprites();
+  auto sprites = scene->getSprites();
   for (auto& sprite : sprites) {
     ShaderProgram program = shaderManager.getShader(sprite->shaderName);
     program.use();
@@ -30,11 +29,11 @@ void Renderer::render(TriangleScene scene) {
   }
 }
 
-void Renderer::generateResources(TriangleScene scene) {
+void Renderer::generateResources(IScene* scene) {
   resourceManager.generateResources(scene);
 }
 
 
-void Renderer::setViewport(Viewport viewport) {
+void Renderer::setViewport(const Viewport& viewport) {
   glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 }

@@ -1,5 +1,5 @@
 #include "App.h"
-#include "Scenes.h"
+#include "Scene.h"
 
 #include <glad/glad.h>
 
@@ -14,9 +14,14 @@ void App::run() {
   // Colors (shader + update sprite class)
   // Textures (shader + update sprite class)
   // Scene manager
-  TriangleScene triangleScene;
+
+  currentScene = sceneManager.getDefaultScene();
   renderer.setClearColor();
-  renderer.generateResources(triangleScene);
+  renderer.generateResources(currentScene);
+
+  currentSceneName = sceneManager.getDefaultSceneName();
+  currentScene = sceneManager.getDefaultScene();
+  ui.setScenes(sceneManager.getSceneNames(), sceneManager.getDefaultSceneIndex());
 
   while (!window.shouldClose()) {
     window.pollEvents();
@@ -24,10 +29,12 @@ void App::run() {
     ui.draw();
 
     renderer.setViewport(calculateViewport());
-    renderer.render(triangleScene);
+    renderer.render(currentScene);
 
     ui.render();
     window.swapBuffers();
+
+    updateCurrentScene();
   }
 }
 
@@ -41,4 +48,13 @@ Viewport App::calculateViewport() const {
     .width = fmbSize.width - uiWidth, 
     .height = fmbSize.height
   };
+}
+
+void App::updateCurrentScene() {
+  std::string uiCurrent = ui.getCurrentSceneName();
+  if (currentSceneName != uiCurrent) {
+    currentSceneName = uiCurrent;
+    currentScene = sceneManager.get(currentSceneName);
+    renderer.generateResources(currentScene);
+  }
 }

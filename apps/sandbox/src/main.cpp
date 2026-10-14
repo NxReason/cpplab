@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 class Entity {
 public:
@@ -7,8 +8,8 @@ public:
 };
 
 int main() {
-  Entity e;
-  std::cout << e.name << '\n';
+  std::unordered_map<std::string, Entity*> e_map;
+  e_map["foo"] = new Entity{};
 
   return 0;
 }

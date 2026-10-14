@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "Scenes.h"
+#include "Scene.h"
 #include <unordered_map>
 
 struct Mesh {
@@ -15,6 +15,6 @@ private:
   std::unordered_map<int, Mesh> meshMap;
 
 public:
-  void generateResources(TriangleScene scene);
+  void generateResources(IScene* scene);
   Mesh getMesh(int meshKey);
 };

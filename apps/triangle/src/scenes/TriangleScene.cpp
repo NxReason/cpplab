@@ -1,7 +1,10 @@
 #include "NxMath.h"
-#include "Scenes.h"
-#include "sprites/Square.h"
+#include "Scene.h"
 #include "sprites/Triangle.h"
+
+std::vector<ISprite*> IScene::getSprites() const {
+  return sprites;
+}
 
 TriangleScene::TriangleScene() {
   Triangle* t = new Triangle { 
@@ -10,8 +13,4 @@ TriangleScene::TriangleScene() {
     Vector2 { .x =  0.0, .y =  0.5 },
   };
   sprites.push_back(t);
-}
-
-std::vector<ISprite*> TriangleScene::getSprites() const {
-  return sprites;
 }

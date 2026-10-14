@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ResourceManager.h"
-#include "Scenes.h"
+#include "Scene.h"
 #include "Shader.h"
 
 struct Viewport {
@@ -16,10 +16,10 @@ public:
   Renderer();
   ~Renderer();
   void setClearColor();
-  void render(TriangleScene scene);
-  void setViewport(Viewport size);
+  void render(IScene* scene);
+  void setViewport(const Viewport& size);
 
-  void generateResources(TriangleScene scene);
+  void generateResources(IScene* scene);
 private:
   ResourceManager resourceManager;
   ShaderManager shaderManager;

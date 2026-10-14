@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneManager.h"
 #include "Window.h"
 #include "EditorUI.h"
 #include "Renderer.h"
+#include "Scene.h"
 
 class App {
 public:
@@ -16,4 +16,7 @@ private:
   SceneManager sceneManager;
 
   Viewport calculateViewport() const;
+  std::string currentSceneName;
+  IScene* currentScene;
+  void updateCurrentScene();
 };

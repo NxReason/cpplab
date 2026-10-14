@@ -67,3 +67,16 @@ void EditorUI::render() {
 float EditorUI::getWidth() const {
   return width;
 }
+
+void EditorUI::setScenes(const std::vector<std::string>& names, size_t current) {
+  scenes = names;
+  currentScene = current;
+}
+
+size_t EditorUI::getCurrentSceneIndex() const {
+  return currentScene;
+}
+
+std::string EditorUI::getCurrentSceneName() const {
+  return scenes[currentScene];
+}

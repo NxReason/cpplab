@@ -16,6 +16,10 @@ public:
   void draw();
   void render();
   float getWidth() const;
+
+  void setScenes(const std::vector<std::string>& names, size_t current = 0);
+  size_t getCurrentSceneIndex() const;
+  std::string getCurrentSceneName() const;
 private:
   float width {};
   const int imGuiWindowFlags = 
