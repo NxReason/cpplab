@@ -1,9 +1,11 @@
 #include "Scene.h"
 
 SceneManager::SceneManager() {
-  defaultScene = "1. Basic Triangle";
+  defaultScene = "4. Colored Triangle";
   scenes["1. Basic Triangle"] = new TriangleScene;
   scenes["2. Basic Square"] = new SquareScene;
+  scenes["3. Multiple Triangles"] = new MultipleTriangles;
+  scenes["4. Colored Triangle"] = new ColoredTriangle;
 }
 
 void SceneManager::add(const std::string& name, IScene* scene) {
@@ -38,4 +40,9 @@ size_t SceneManager::getDefaultSceneIndex() const {
     }
   }
   return 0;
+}
+
+
+std::vector<ISprite*> IScene::getSprites() const {
+  return sprites;
 }

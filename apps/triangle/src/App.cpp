@@ -9,12 +9,9 @@ App::App()
 
 void App::run() {
   // TODO:
-  // IBO
-  // Rectangle
   // Uniforms
   // Colors (shader + update sprite class)
   // Textures (shader + update sprite class)
-  // Scene manager
 
   currentScene = sceneManager.getDefaultScene();
   renderer.setClearColor();

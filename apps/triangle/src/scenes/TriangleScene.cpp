@@ -3,10 +3,6 @@
 
 #include "Vector.h"
 
-std::vector<ISprite*> IScene::getSprites() const {
-  return sprites;
-}
-
 TriangleScene::TriangleScene() {
   Triangle* t = new Triangle { 
     nxmath::Vector3{ -0.5f, -0.5f },

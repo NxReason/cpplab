@@ -31,3 +31,9 @@ std::vector<unsigned int> Square::getIndices() const {
 int Square::getVertexCount() const {
   return 6;
 }
+
+std::vector<VertexAttribute> Square::getVAOLayout() const {
+  return {
+    VertexAttribute { 3, GL_FLOAT }
+  };
+}

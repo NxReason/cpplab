@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Graphics.h"
 #include <string>
 #include <vector>
 
@@ -11,4 +12,5 @@ public:
   virtual std::vector<float> getCoords() const = 0;
   virtual std::vector<unsigned int> getIndices() const = 0;
   virtual int getVertexCount() const = 0;
+  virtual std::vector<VertexAttribute> getVAOLayout() const = 0;
 };

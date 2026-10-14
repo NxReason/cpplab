@@ -1,6 +1,5 @@
 #include "ResourceManager.h"
 #include "Graphics.h"
-#include <vector>
 
 int ResourceManager::id = 0;
 
@@ -20,12 +19,9 @@ void ResourceManager::generateResources(IScene* scene) {
     vbo.data(sprite->getCoords());
     ebo.data(sprite->getIndices());
 
-    auto attribs = std::vector<VertexAttribute>{ VertexAttribute { 3, GL_FLOAT } };
-    vao.setAttributeLayout(attribs);
+    vao.setAttributeLayout(sprite->getVAOLayout());
 
     sprite->meshName = id;
     meshMap[id++] = Mesh { vao, vbo, ebo };
-
-    sprite->shaderName = "default";
   }
 }

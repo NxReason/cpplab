@@ -70,6 +70,11 @@ ShaderManager::ShaderManager() {
   auto fragShader = Shader(GL_FRAGMENT_SHADER, "./shaders/default.frag");
   auto program = ShaderProgram(vertShader, fragShader);
   shaders["default"] = program;
+
+  auto coloredVert = Shader(GL_VERTEX_SHADER, "./shaders/colored.vert");
+  auto coloredFrag = Shader(GL_FRAGMENT_SHADER, "./shaders/colored.frag");
+  auto coloredProgram = ShaderProgram(coloredVert, coloredFrag);
+  shaders["colored"] = coloredProgram;
 }
 
 ShaderProgram ShaderManager::getShader(const std::string& shaderName) const {

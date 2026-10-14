@@ -44,3 +44,13 @@ class SquareScene : public IScene {
 public:
   SquareScene();
 };
+
+class MultipleTriangles : public IScene {
+public:
+  MultipleTriangles();
+};
+
+class ColoredTriangle : public IScene {
+public:
+  ColoredTriangle();
+};
