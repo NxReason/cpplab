@@ -9,9 +9,9 @@ App::App()
 
 void App::run() {
   // TODO:
-  // Uniforms
-  // Colors (shader + update sprite class)
   // Textures (shader + update sprite class)
+  // View matrix
+  // Scene update loop
 
   currentScene = sceneManager.getDefaultScene();
   renderer.setClearColor();

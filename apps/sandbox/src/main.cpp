@@ -1,15 +1,16 @@
+#include "CliArgs.h"
 #include <iostream>
-#include <string>
-#include <unordered_map>
 
-class Entity {
-public:
-  std::string name { "nxr" };
-};
+using namespace nxcli;
 
-int main() {
-  std::unordered_map<std::string, Entity*> e_map;
-  e_map["foo"] = new Entity{};
+int main(int argc, char** argv) {
+  CliArgs args { argc, argv, {
+    Arg { .name = "out", .t = typeid(bool) },
+  } };
+  args.summary();
+
+  auto val = args.get_value<bool>("out");
+  std::cout << val << '\n';
 
   return 0;
 }

@@ -1,5 +1,7 @@
 param(
-  [string]$target = "triangle"
+  [string]$target = "triangle",
+  [Parameter(ValueFromRemainingArguments = $true)]
+  [string[]]$appArgs
 )
 $dir = "./build/bin/${target}"
 $exe = "${target}.exe"
@@ -20,7 +22,7 @@ if ($LASTEXITCODE -eq 0) {
 
   Write-Host "--- Launching [${target}] ---" -ForegroundColor Green
   Push-Location $dir
-  & "./$exe"
+  & "./$exe" @appArgs
   Pop-Location
 } else {
   Write-Host "--- Build Failed ---" -ForegroundColor Red
