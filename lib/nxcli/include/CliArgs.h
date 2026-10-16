@@ -19,7 +19,7 @@ struct Arg {
 
 class CliArgs {
 public:
-  CliArgs(int argc, char** argv, const std::vector<Arg>& reqs, bool lazy = false);
+  CliArgs(int argc, char** argv, const std::vector<Arg>& reqs = {}, bool lazy = false);
 
   void process();
 

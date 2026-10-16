@@ -1,5 +1,4 @@
 add_subdirectory(hello_world)
-add_subdirectory(triangle)
 
 # cpp lang
 add_subdirectory(patterns_ex)
@@ -8,6 +7,10 @@ add_subdirectory(templates)
 
 # OpenGL
 add_subdirectory(learnOpenGL)
+add_subdirectory(triangle)
+
+# CLI Tools
+add_subdirectory(trim_img)
 
 # testing
 add_subdirectory(sandbox)
