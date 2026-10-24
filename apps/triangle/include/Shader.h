@@ -9,16 +9,19 @@
 class Shader {
 public:
   Shader(int type, const char* filepath);
-  unsigned int create();
+
+  unsigned int getId() const;
 private:
+  unsigned int id;
   int type;
-  std::string source;
 };
 
 class ShaderProgram {
 public:
   ShaderProgram();
   ShaderProgram(Shader& vertex, Shader& fragment);
+  ShaderProgram(const std::string& commonName);
+  ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
 
   void create(Shader& vertex, Shader& fragment);
   void use();

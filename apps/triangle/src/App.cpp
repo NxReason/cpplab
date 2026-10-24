@@ -9,6 +9,9 @@ App::App()
 
 void App::run() {
   // TODO:
+  // Update Shader classes
+  // Dynamic getCoords / getVAO layout
+  // UI / Scene interaction
   // Textures (shader + update sprite class)
   // View matrix
   // Scene update loop
