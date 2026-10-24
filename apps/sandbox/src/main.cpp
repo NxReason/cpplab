@@ -1,17 +1,32 @@
-#include "nxdlist.h"
+#include "nxdarray.h"
 #include <iostream>
-#include <vector>
 
+
+template <typename T>
+void describe_arr(const Array<T>& values) {
+  std::cout << "Count: " << values.count() << '\n';
+  std::cout << "Capacity: " << values.capacity() << '\n';
+  for (size_t i = 0; i < values.count(); ++i) {
+    std::cout << values[i] << '\n';
+  }
+}
 
 int main() {
-  // DList<int> list { 4, 8, 15, 16 };
-  DList<int> list { std::vector<int> { 4, 8, 15, 16, 23, 42 } };
+  Array<int> values {4, 8, 15, 16, 23, 42};
+  describe_arr(values);
 
-  for (size_t i = 0; i < list.get_count(); ++i) {
-    std::cout << i << " = " << list[i] << '\n';
-  }
+  std::cout << values.take_at(2) << '\n';
+  values.remove_at(3);
+  describe_arr(values);
 
-  std::cout << list << '\n';
+  auto bytes = 10000 * 10000 / 2 * sizeof(void*);
+  auto kb = (float)bytes / 1024;
+  auto mb = kb / 1024;
+  auto gb = mb / 1024;
+  std::cout << "bytes: " << bytes << '\n';
+  std::cout << "kb: " << kb << '\n';
+  std::cout << "mb: " << mb << '\n';
+  std::cout << "gb: " << gb << '\n';
 
   return 0;
 }

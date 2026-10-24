@@ -11,11 +11,22 @@ private:
     T value;
     Item* prev;
     Item* next;
+
+    ~Item() {
+      std::cout << "DList Item with value " << value << " deleted" << '\n';
+    }
   };
 
 public:
   DList(){
     init();
+  }
+
+  DList(DList& other) {
+    init();
+    for (const T& value : other) {
+      append(value);
+    }
   }
 
   
@@ -73,6 +84,12 @@ public:
     for (size_t index = 0; index != pos; ++index) prev = prev->next;
 
     add_item(value, prev, prev->next);
+  }
+
+  void insert_sorted(const T& value) {
+    auto target = m_head->next;
+    while (target != m_tail && target->value < value) target = target->next;
+    add_item(value, target->prev, target);
   }
 
 
