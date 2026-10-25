@@ -1,54 +1,59 @@
 #include "graphics/Renderer.h"
-#include "graphics/GL.h"
+#include "ResourceManager.h"
 #include "graphics/Shader.h"
 
 #include <glad/glad.h>
 
-Renderer::Renderer() { }
-
-Renderer::~Renderer() {
-  // glDeleteVertexArrays(1, &vao);
-  // glDeleteBuffers(1, &vbo);
+Renderer::Renderer() {
+  program.create("default");
 }
+
+Renderer::~Renderer() { }
 
 void Renderer::clear_color() {
   glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 }
 
 
-void Renderer::render() {
+void Renderer::render(ResourceManager& res_manager, const Scene* scene) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  program.use();
-  vao.bind();
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-  // for (auto& sprite : sprites) {
+  // program.use();
+  // vao.bind();
+  // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+
+  for (const auto& sprite : scene->sprites) {
   //   ShaderProgram program = shaderManager.getShader(sprite->shaderName);
-  //   program.use();
+    program.use();
   //   program.setUniforms(sprite->uniforms);
 
-  //   Mesh mesh = resourceManager.getMesh(sprite->meshId);
-  //   mesh.vao.bind();
+    Mesh mesh = res_manager.get_mesh(sprite->mesh_id);
+    mesh.vao.bind();
 
-  //   // glDrawArrays(GL_TRIANGLES, 0, sprite->getVertexCount());
-  //   glDrawElements(GL_TRIANGLES, sprite->getVertexCount(), GL_UNSIGNED_INT, 0);
-  // }
+    glDrawElements(GL_TRIANGLES, sprite->vertex_count, GL_UNSIGNED_INT, 0);
+  }
 }
 
-void Renderer::gen_resources() {
-  float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f,
-  };
-  vao.bind();
-  VBO vbo;
-  vbo.bind();
-  vbo.data(vertices, sizeof(vertices));
-  vao.attrib_layout();
+// void Renderer::gen_resources(const Scene& scene) {
+//   for (const auto& sprite : scene.sprites) {
+//   }
+  // float vertices[] = {
+  //   -0.5f, -0.5f, 0.0f,
+  //   0.5f, -0.5f, 0.0f,
+  //   0.0f, 0.5f, 0.0f,
+  // };
+  // vao.bind();
+  // VBO vbo;
+  // vbo.bind();
+  // vbo.data(vertices, sizeof(vertices));
+  // std::vector<unsigned int> indices = { 0, 1, 2 };
+  // EBO ebo;
+  // ebo.bind();
+  // ebo.data(indices);
+  // vao.attrib_layout();
 
-  program.create("default");
-}
+//   program.create("default");
+// }
 
 
 void Renderer::set_viewport(const Viewport& viewport) {

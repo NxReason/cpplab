@@ -9,9 +9,14 @@
 
 #include "app/Window.h"
 
+struct Settings {
+  int scene_n { 0 };
+  bool is_polygon { false };
+};
+
 class EditorUI {
 public:
-  EditorUI(const Window& window);
+  EditorUI(const Window& window, Settings* settings);
   ~EditorUI();
   void new_frame();
   void draw();
@@ -26,6 +31,8 @@ private:
     ImGuiWindowFlags_NoCollapse;
 
   std::vector<std::string> scenes = {};
+
+  Settings* settings;
 
   void draw_common_elements();
 };

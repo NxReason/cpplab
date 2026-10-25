@@ -1,7 +1,7 @@
 #pragma once
 
-#include "graphics/GL.h"
 #include "ResourceManager.h"
+#include "Scenes.h"
 #include "Shader.h"
 
 struct Viewport {
@@ -16,13 +16,9 @@ public:
   Renderer();
   ~Renderer();
   void clear_color();
-  void render();
+  void render(ResourceManager& res_manager, const Scene* scene);
   void set_viewport(const Viewport& size);
   void set_polygon_mode(bool isOn);
-
-  void gen_resources();
 private:
   ShaderProgram program;
-  VAO vao;
-  ResourceManager resource_manager;
 };

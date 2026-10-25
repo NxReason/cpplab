@@ -1,6 +1,7 @@
 #include "app/EditorUI.h"
 
-EditorUI::EditorUI(const Window& window) {
+EditorUI::EditorUI(const Window& window, Settings* settings)
+  : settings { settings } {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -40,9 +41,8 @@ void EditorUI::draw() {
 void EditorUI::draw_common_elements() {
   if (scenes.size() == 0) {
     ImGui::Text("No scenes");
-    return;
   }
-
+  else {
   // auto comboPreview = scenes[currentScene];
   // if (ImGui::BeginCombo("Scenes", comboPreview.c_str())) {
   //   for (size_t n = 0; n < scenes.size(); ++n) {
@@ -56,8 +56,9 @@ void EditorUI::draw_common_elements() {
   //   }
   //   ImGui::EndCombo();
   // }
-  static bool is_polygon;
-  ImGui::Checkbox("Polygon mode", &is_polygon);
+  }
+
+  ImGui::Checkbox("Polygon mode", &(settings->is_polygon));
 }
 
 void EditorUI::render() {

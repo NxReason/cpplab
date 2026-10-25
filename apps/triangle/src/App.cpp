@@ -1,25 +1,29 @@
 #include "app/App.h"
+#include "Scenes.h"
 
 #include <glad/glad.h>
 
 App::App()
-  : window { 1440, 800 }, ui { window } { }
+  : window { 1440, 800 }, ui { window, &ui_settings } { }
 
 
 void App::run() {
   renderer.clear_color();
+  TriangleScene scene;
 
-  renderer.gen_resources();
+  resource_manager.gen_resources(&scene);
   while (!window.should_close()) {
     window.poll_events();
     ui.new_frame();
     ui.draw();
 
     renderer.set_viewport(calc_viewport());
-    renderer.render();
+    renderer.render(resource_manager, &scene);
 
     ui.render();
     window.swap_buffers();
+
+    update_settings();
   }
 }
 
@@ -33,4 +37,11 @@ Viewport App::calc_viewport() const {
     .width = fmb_size.width - ui_width, 
     .height = fmb_size.height
   };
+}
+
+void App::update_settings() {
+  if (ui_settings.is_polygon != current_settings.is_polygon) {
+    current_settings.is_polygon = ui_settings.is_polygon;
+    renderer.set_polygon_mode(current_settings.is_polygon);
+  }
 }
