@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "graphics/Shader.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -35,6 +35,9 @@ Shader::Shader(int type, const char* filepath)
     std::cerr << info << '\n';
   }
 }
+
+Shader::Shader(int type, const std::string& filepath) 
+  : Shader { type, filepath.c_str() } {}
 
 
 unsigned int Shader::getId() const {
@@ -78,6 +81,13 @@ void ShaderProgram::create(Shader& vertex, Shader& fragment) {
   glDeleteShader(fragmentId);
 }
 
+
+void ShaderProgram::create(const std::string& common_name) {
+  auto vertex_shader = Shader(GL_VERTEX_SHADER, "./shaders/" + common_name + ".vert");
+  auto fragment_shader = Shader(GL_FRAGMENT_SHADER, "./shaders/" + common_name + ".frag");
+  create(vertex_shader, fragment_shader);
+}
+
 void ShaderProgram::use() {
   glUseProgram(id);
 }
@@ -91,18 +101,4 @@ void ShaderProgram::setUniforms(std::unordered_map<std::string, nxmath::Vector3>
 void ShaderProgram::setUniform(const std::string& name, const nxmath::Vector3 val) {
   int location = glGetUniformLocation(id, name.c_str());
   glUniform3f(location, val.x, val.y, val.z);
-}
-
-// MANAGER
-ShaderManager::ShaderManager() {
-  shaders["default"] = ShaderProgram { "default" };
-  shaders["colored"] = ShaderProgram { "colored" };
-  shaders["colored_uni"] = ShaderProgram { "colored_uni" };
-}
-
-ShaderProgram ShaderManager::getShader(const std::string& shaderName) const {
-  if(shaders.contains(shaderName)) {
-    return shaders.at(shaderName);
-  }
-  return shaders.at("default");
 }

@@ -1,14 +1,16 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <string>
 #include <unordered_map>
+
+#include <glad/glad.h>
 
 #include "Vector.h"
 
 class Shader {
 public:
   Shader(int type, const char* filepath);
+  Shader(int type, const std::string& filepath);
 
   unsigned int getId() const;
 private:
@@ -20,9 +22,10 @@ class ShaderProgram {
 public:
   ShaderProgram();
   ShaderProgram(Shader& vertex, Shader& fragment);
-  ShaderProgram(const std::string& commonName);
-  ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
+  ShaderProgram(const std::string& common_name);
+  ShaderProgram(const std::string& vertex_path, const std::string& fragment_path);
 
+  void create(const std::string& common_name);
   void create(Shader& vertex, Shader& fragment);
   void use();
 
@@ -30,13 +33,4 @@ public:
   void setUniform(const std::string& name, nxmath::Vector3 value);
 private:
   unsigned int id;
-};
-
-class ShaderManager {
-private:
-  std::unordered_map<std::string, ShaderProgram> shaders;
-
-public:
-  ShaderManager();
-  ShaderProgram getShader(const std::string& shaderName) const;
 };

@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Graphics.h"
-#include "Scene.h"
 #include <unordered_map>
 
+// #include "./graphics/GL.h"
+
 struct Mesh {
-  VAO vao;
-  VBO vbo;
-  EBO ebo;
+  int id;
+  // VAO vao;
+  // VBO vbo;
+  // EBO ebo;
 };
 
 class ResourceManager {
@@ -16,6 +17,6 @@ private:
   std::unordered_map<int, Mesh> meshMap;
 
 public:
-  void generateResources(IScene* scene);
+  void generateResources();
   Mesh getMesh(int meshKey);
 };

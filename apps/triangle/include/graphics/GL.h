@@ -1,12 +1,12 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <vector>
 
 class VBO {
 public:
   VBO();
   void bind();
+  void unbind();
   void data(std::vector<float> vertices);
   void data(const float* vertices, size_t size);
 private:
@@ -31,7 +31,7 @@ class VAO {
 public:
   VAO();
   void bind();
-  void setAttributeLayout(const std::vector<VertexAttribute>& layout);
+  void attrib_layout();
 private:
   unsigned int id;
 };

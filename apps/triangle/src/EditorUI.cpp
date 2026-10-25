@@ -1,5 +1,4 @@
-#include "EditorUI.h"
-#include "imgui.h"
+#include "app/EditorUI.h"
 
 EditorUI::EditorUI(const Window& window) {
   IMGUI_CHECKVERSION();
@@ -9,7 +8,7 @@ EditorUI::EditorUI(const Window& window) {
   (void)io;
   ImGui::StyleColorsDark();
 
-  ImGui_ImplGlfw_InitForOpenGL(window.getGlfwWindow(), true);
+  ImGui_ImplGlfw_InitForOpenGL(window.glfw_window(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
 }
 
@@ -19,7 +18,7 @@ EditorUI::~EditorUI() {
   ImGui::DestroyContext();
 }
 
-void EditorUI::newFrame() {
+void EditorUI::new_frame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
 
@@ -32,36 +31,33 @@ void EditorUI::newFrame() {
 void EditorUI::draw() {
   ImGui::Begin("Scene", nullptr, imGuiWindowFlags);
 
-  drawSceneCombo();
-  drawPolygonCheckbox();
+  draw_common_elements();
 
   width = ImGui::GetWindowWidth();
   ImGui::End();
 }
 
-void EditorUI::drawSceneCombo() {
+void EditorUI::draw_common_elements() {
   if (scenes.size() == 0) {
     ImGui::Text("No scenes");
     return;
   }
 
-  auto comboPreview = scenes[currentScene];
-  if (ImGui::BeginCombo("Scenes", comboPreview.c_str())) {
-    for (size_t n = 0; n < scenes.size(); ++n) {
-      const bool isSelected = (currentScene == n);
-      if (ImGui::Selectable(scenes[n].c_str(), isSelected)) {
-        currentScene = n;
-      }
-      if (isSelected) {
-        ImGui::SetItemDefaultFocus();
-      }
-    }
-    ImGui::EndCombo();
-  }
-}
-
-void EditorUI::drawPolygonCheckbox() {
-  ImGui::Checkbox("Polygon mode", &isPolygon);
+  // auto comboPreview = scenes[currentScene];
+  // if (ImGui::BeginCombo("Scenes", comboPreview.c_str())) {
+  //   for (size_t n = 0; n < scenes.size(); ++n) {
+  //     const bool isSelected = (currentScene == n);
+  //     if (ImGui::Selectable(scenes[n].c_str(), isSelected)) {
+  //       currentScene = n;
+  //     }
+  //     if (isSelected) {
+  //       ImGui::SetItemDefaultFocus();
+  //     }
+  //   }
+  //   ImGui::EndCombo();
+  // }
+  static bool is_polygon;
+  ImGui::Checkbox("Polygon mode", &is_polygon);
 }
 
 void EditorUI::render() {
@@ -69,23 +65,10 @@ void EditorUI::render() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-float EditorUI::getWidth() const {
+float EditorUI::get_width() const {
   return width;
 }
 
-void EditorUI::setScenes(const std::vector<std::string>& names, size_t current) {
+void EditorUI::set_scenes(const std::vector<std::string>& names) {
   scenes = names;
-  currentScene = current;
-}
-
-size_t EditorUI::getCurrentSceneIndex() const {
-  return currentScene;
-}
-
-std::string EditorUI::getCurrentSceneName() const {
-  return scenes[currentScene];
-}
-
-bool EditorUI::getIsPolygon() const {
-  return isPolygon;
 }

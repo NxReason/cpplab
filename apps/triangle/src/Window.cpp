@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "app/Window.h"
 
 #include <GLFW/glfw3.h>
 #include <cassert>
@@ -12,7 +12,7 @@ Window::Window(int width, int height, const char* title) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(
+  m_window = glfwCreateWindow(
     width,
     height,
     title,
@@ -20,59 +20,59 @@ Window::Window(int width, int height, const char* title) {
     nullptr
   );
 
-  if (!window) {
+  if (!m_window) {
     glfwTerminate();
     throw std::runtime_error("Failed to create GLFW window");
   }
 
-  glfwSetWindowUserPointer(window, this);
-  glfwMakeContextCurrent(window);
+  glfwSetWindowUserPointer(m_window, this);
+  glfwMakeContextCurrent(m_window);
 
-  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-  glfwSetKeyCallback(window, keyCallback);
+  glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+  glfwSetKeyCallback(m_window, key_callback);
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(m_window);
     glfwTerminate();
     throw std::runtime_error("Failed to initialize GLAD");
   }
 
-  framebufferSize = { width, height };
+  m_framebuffer_size = { width, height };
   glViewport(0, 0, width, height);
 }
 
 Window::~Window() {
-  glfwDestroyWindow(window);
+  glfwDestroyWindow(m_window);
   glfwTerminate();
 }
 
-void Window::pollEvents() const {
+void Window::poll_events() const {
   glfwPollEvents();
 }
 
-void Window::swapBuffers() const {
-  glfwSwapBuffers(window);
+void Window::swap_buffers() const {
+  glfwSwapBuffers(m_window);
 }
 
-bool Window::shouldClose() const {
-  return glfwWindowShouldClose(window);
+bool Window::should_close() const {
+  return glfwWindowShouldClose(m_window);
 }
 
-FramebufferSize Window::getFramebufferSize() const {
-  return framebufferSize;
+FramebufferSize Window::framebuffer_size() const {
+  return m_framebuffer_size;
 }
 
-GLFWwindow* Window::getGlfwWindow() const {
-  return window;
+GLFWwindow* Window::glfw_window() const {
+  return m_window;
 }
 
-void Window::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+void Window::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   auto* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
   assert(self != nullptr);
-  self->framebufferSize = { width, height };
+  self->m_framebuffer_size = { width, height };
 }
 
-void Window::keyCallback(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */) {
+void Window::key_callback(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }

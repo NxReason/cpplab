@@ -14,13 +14,11 @@ target_include_directories(learnOpenGL PRIVATE
   ${CMAKE_SOURCE_DIR}/external/stbi
   ${CMAKE_SOURCE_DIR}/external/glm)
 
-target_include_directories(learnOpenGL PRIVATE
-  ${CMAKE_SOURCE_DIR}/external/glm)
-
 target_link_libraries(learnOpenGL PRIVATE
   glad
   glfw
   imgui
+  stb
   opengl32
   gdi32
   user32)

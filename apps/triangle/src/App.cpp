@@ -1,5 +1,4 @@
-#include "App.h"
-#include "Scene.h"
+#include "app/App.h"
 
 #include <glad/glad.h>
 
@@ -8,61 +7,30 @@ App::App()
 
 
 void App::run() {
-  // TODO:
-  // Update Shader classes
-  // Dynamic getCoords / getVAO layout
-  // UI / Scene interaction
-  // Textures (shader + update sprite class)
-  // View matrix
-  // Scene update loop
+  renderer.clear_color();
 
-  currentScene = sceneManager.getDefaultScene();
-  renderer.setClearColor();
-  renderer.generateResources(currentScene);
-
-  currentSceneName = sceneManager.getDefaultSceneName();
-  currentScene = sceneManager.getDefaultScene();
-  ui.setScenes(sceneManager.getSceneNames(), sceneManager.getDefaultSceneIndex());
-
-  while (!window.shouldClose()) {
-    window.pollEvents();
-    ui.newFrame();
+  renderer.gen_resources();
+  while (!window.should_close()) {
+    window.poll_events();
+    ui.new_frame();
     ui.draw();
 
-    renderer.setViewport(calculateViewport());
-    renderer.render(currentScene);
+    renderer.set_viewport(calc_viewport());
+    renderer.render();
 
     ui.render();
-    window.swapBuffers();
-
-    updateCurrentScene();
+    window.swap_buffers();
   }
 }
 
-Viewport App::calculateViewport() const {
-  auto fmbSize = window.getFramebufferSize();
-  auto uiWidth = static_cast<int>(ui.getWidth());
+Viewport App::calc_viewport() const {
+  auto fmb_size = window.framebuffer_size();
+  auto ui_width = static_cast<int>(ui.get_width());
 
   return Viewport { 
-    .x = uiWidth,
+    .x = ui_width,
     .y = 0,
-    .width = fmbSize.width - uiWidth, 
-    .height = fmbSize.height
+    .width = fmb_size.width - ui_width, 
+    .height = fmb_size.height
   };
-}
-
-void App::updateCurrentScene() {
-  std::string uiCurrent = ui.getCurrentSceneName();
-  if (currentSceneName != uiCurrent) {
-    currentSceneName = uiCurrent;
-    currentScene = sceneManager.get(currentSceneName);
-    renderer.generateResources(currentScene);
-  }
-
-  static bool isPoly = false;
-  bool uiIsPoly = ui.getIsPolygon();
-  if (isPoly != uiIsPoly) {
-    isPoly = uiIsPoly;
-    renderer.setPolygonMode(isPoly);
-  }
 }
