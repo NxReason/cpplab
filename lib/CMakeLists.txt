@@ -5,5 +5,6 @@ add_subdirectory(nxutils)
 add_subdirectory(nxmath)
 add_subdirectory(nxalgo)
 add_subdirectory(nxcli)
+add_subdirectory(nxid)
 
 add_subdirectory(patterns)
