@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <queue>
+#include <stack>
 #include <vector>
 #include <iostream>
 
@@ -224,6 +225,68 @@ std::vector<size_t> bfs(const AdjList<T>& graph, const T& start_node, void(*hand
       fifo.push(edge);
     }
   }
+
+  return result;
+}
+
+template<typename T>
+std::vector<size_t> dfs_iter(const AdjList<T>& graph, const T& start_node) {
+  auto can_start = graph.get_node_index(start_node);
+  if (!can_start) return {};
+
+  size_t start_index = *can_start;
+  std::stack<size_t> lifo{};
+  std::vector<bool> visited (graph.node_count());
+  std::vector<size_t> result {};
+
+  visited[start_index] = true;
+  lifo.push(start_index);
+
+  while (!lifo.empty()) {
+    auto node_index = lifo.top();
+    lifo.pop();
+
+    result.push_back(node_index);
+
+    const auto& node = graph.get_node(node_index);
+    for (const auto& edge : node.edges) {
+      if (visited[edge]) continue;
+
+      visited[edge] = true;
+      lifo.push(edge);
+    }
+  }
+
+  return result;
+}
+
+template<typename T>
+void dfs_rec(
+  const AdjList<T>& graph,
+  std::vector<bool>& visited,
+  std::vector<size_t>& result,
+  size_t node_index)
+{
+  visited[node_index] = true;
+  result.push_back(node_index);
+
+  const auto& node = graph.get_node(node_index);
+  for (const auto& edge : node.edges) {
+    if (visited[edge]) continue;
+    dfs_rec(graph, visited, result, edge);
+  }
+}
+
+template<typename T>
+std::vector<size_t> dfs(const AdjList<T>& graph, const T& start_node) {
+  auto can_start = graph.get_node_index(start_node);
+  if (!can_start) return {};
+
+  size_t start_index = *can_start;
+  std::vector<bool> visited (graph.node_count());
+  std::vector<size_t> result {};
+
+  dfs_rec(graph, visited, result, start_index);
 
   return result;
 }

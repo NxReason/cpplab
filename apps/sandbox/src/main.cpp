@@ -42,8 +42,20 @@ int main() {
   al.print();
 
   std::cout << "BFS:" << '\n';
-  auto res = bfs(al, e1, print_entity_name);
-  for (const auto index: res) {
+  auto bfs_res = bfs(al, e1, print_entity_name);
+  for (const auto index: bfs_res) {
+    std::cout << index << '\n';
+  }
+
+  std::cout << "DFS Iter:" << '\n';
+  auto dfs_res = dfs_iter(al, e1);
+  for (const auto index: dfs_res) {
+    std::cout << index << '\n';
+  }
+
+  std::cout << "DFS Rec:" << '\n';
+  auto dfs_rec_res = dfs(al, e1);
+  for (const auto index: dfs_rec_res) {
     std::cout << index << '\n';
   }
 
