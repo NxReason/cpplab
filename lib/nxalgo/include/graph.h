@@ -1,5 +1,6 @@
 #pragma once
 #include <optional>
+#include <queue>
 #include <vector>
 #include <iostream>
 
@@ -146,6 +147,10 @@ public:
   }
 
   // Getters
+  const auto& get_node(size_t index) const {
+    return m_nodes[index];
+  }
+
   std::optional<size_t> get_node_index(const T& node) const {
     size_t index = 0;
     for (const Node& n : m_nodes) {
@@ -186,3 +191,39 @@ public:
 private:
   Nodes m_nodes;
 };
+
+template<typename T>
+std::vector<size_t> bfs(const AdjList<T>& graph, const T& start_node, void(*handler)(const T&) = nullptr) {
+  auto can_start = graph.get_node_index(start_node);
+  // TODO: decide how to indicate error to user later
+  if (!can_start) return {};
+
+  size_t start_index = *can_start;
+  std::queue<size_t> fifo{};
+  std::vector<bool> visited (graph.node_count());
+  std::vector<size_t> result {};
+
+  visited[start_index] = true;
+  fifo.push(start_index);
+
+  while (!fifo.empty()) {
+    auto node_index = fifo.front();
+    fifo.pop();
+
+    // process node
+    result.push_back(node_index);
+    const auto& node = graph.get_node(node_index);
+    if (handler) handler(node.value);
+
+    // process its neighbors
+    for (const auto& edge : node.edges) {
+      if (visited[edge]) continue;
+
+      // visited.insert(edge);
+      visited[edge] = true;
+      fifo.push(edge);
+    }
+  }
+
+  return result;
+}
