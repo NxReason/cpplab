@@ -290,3 +290,50 @@ std::vector<size_t> dfs(const AdjList<T>& graph, const T& start_node) {
 
   return result;
 }
+
+template<typename T>
+std::vector<size_t> shortest_path(const AdjList<T>& graph, const T& start_node, const T& end_node) {
+  auto can_start = graph.get_node_index(start_node);
+  auto can_end = graph.get_node_index(end_node);
+  // TODO: decide how to indicate error to user later
+  if (!can_start || !can_end) return {};
+
+  size_t start_index = *can_start;
+  size_t end_index = *can_end;
+  std::queue<size_t> fifo{};
+  std::vector<bool> visited (graph.node_count());
+  std::vector<std::optional<size_t>> parents (graph.node_count());
+
+  visited[start_index] = true;
+  parents[start_index] = std::nullopt;
+  fifo.push(start_index);
+
+  while (!fifo.empty()) {
+    auto node_index = fifo.front();
+    fifo.pop();
+
+    const auto& node = graph.get_node(node_index);
+
+    for (const auto& edge : node.edges) {
+      if (visited[edge]) continue;
+
+      parents[edge] = node_index;
+      visited[edge] = true;
+
+      if (edge == end_index) {
+        // recreate path and quit
+        std::vector<size_t> path { edge };
+        std::optional<size_t> path_step = parents[edge];
+        while (path_step) {
+          path.push_back(*path_step);
+          path_step = parents[*path_step];
+        }
+        std::reverse(path.begin(), path.end());
+        return path;
+      }
+      fifo.push(edge);
+    }
+  }
+
+  return {};
+}
