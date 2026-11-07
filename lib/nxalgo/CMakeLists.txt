@@ -8,3 +8,8 @@ target_include_directories(nxalgo
     PUBLIC
         include
 )
+
+target_link_libraries(nxalgo
+    PRIVATE
+        nxid
+)

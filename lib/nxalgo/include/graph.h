@@ -1,9 +1,15 @@
 #pragma once
+#include <limits>
 #include <optional>
 #include <queue>
 #include <stack>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <iostream>
+
+#include "nxid.h"
 
 /*
 * Adjacency list
@@ -336,4 +342,144 @@ std::vector<size_t> shortest_path(const AdjList<T>& graph, const T& start_node, 
   }
 
   return {};
+}
+
+// Weighted Graph
+template<typename T>
+class AdjListWeight {
+public:
+  struct Edge {
+    std::string to;
+    float weight;
+  };
+
+  struct Node {
+    std::string id;
+    T value;
+    std::vector<Edge> edges {};
+  };
+
+  // Adding / removing elements
+  std::string add_node(const T& value) {
+    auto id = nxid();
+    m_nodes[id] = Node { id, value };
+    return id;
+  };
+
+  std::vector<std::string> add_nodes(const std::vector<T>& values) {
+    std::vector<std::string> ids;
+    ids.reserve(values.size());
+    for (const auto& val : values) {
+      ids.push_back(add_node(val));
+    }
+    return ids;
+  };
+
+  void add_edge(const std::string& from_id, const std::string& to_id, float weight = 1.0) {
+    if (m_nodes.contains(from_id) && m_nodes.contains(to_id)) {
+      m_nodes[from_id].edges.push_back(Edge { to_id, weight });
+    }
+  }
+
+  // Getters
+  std::optional<Node> node(const std::string& id) const {
+    if (m_nodes.contains(id)) return m_nodes.at(id);
+
+    return std::nullopt;
+  }
+
+  const std::unordered_map<std::string, Node> nodes() const { return m_nodes; }
+
+  size_t node_count() const { return m_nodes.size(); }
+
+  size_t edge_count() const { 
+    size_t total = 0;
+    for (const auto& [_, node] : m_nodes) {
+      total += node.edges.size();
+    }
+    return total;
+  }
+private:
+  std::unordered_map<std::string, Node> m_nodes;
+};
+
+
+// Dijkstra
+using Distances = std::unordered_map<std::string, float>;
+using Parents = std::unordered_map<std::string, std::optional<std::string>>;
+using Ids = std::unordered_set<std::string>;
+
+inline const std::string find_current_closest(const Ids& unv, const Distances& dist) {
+  float current_min = std::numeric_limits<float>::max();
+  std::string min_id{};
+  for (const auto& u : unv) {
+    float current_dist = dist.at(u);
+    if (current_dist < current_min) {
+      current_min = current_dist;
+      min_id = u;
+    }
+  }
+  return min_id;
+}
+
+struct DijkstraData {
+  Distances distances;
+  Parents parents;
+};
+
+template<typename T>
+DijkstraData build_paths(const AdjListWeight<T>& graph, const std::string& start_id) {
+  auto nodes = graph.nodes();
+  Distances distances{};
+  Parents parents{};
+  Ids unvisited{};
+  unvisited.insert(start_id);
+  Ids visited{};
+
+
+  for (const auto& [node_id, _] : nodes) {
+    distances[node_id] = std::numeric_limits<float>::max();
+  }
+  distances[start_id] = 0;
+
+  while (!unvisited.empty()) {
+    auto node_id = find_current_closest(unvisited, distances);
+    unvisited.erase(node_id);
+    visited.insert(node_id);
+
+    float curr_distance = distances[node_id];
+    for (const auto& edge : nodes[node_id].edges) {
+      float distance = curr_distance + edge.weight;
+      if (distance < distances[edge.to]) {
+        distances[edge.to] = distance;
+        parents[edge.to] = node_id;
+      }
+      if (!visited.contains(edge.to)) {
+        unvisited.insert(edge.to);
+      }
+    }
+  }
+
+  return DijkstraData { distances, parents };
+}
+
+template<typename T>
+std::vector<std::string> shortest_path(AdjListWeight<T> graph, const std::string& start_id, const std::string& end_id) {
+  auto data = build_paths(graph, start_id);
+
+  std::vector<std::string> path{ end_id };
+  auto parent = data.parents[end_id];
+  while (parent) {
+    path.push_back(*parent);
+    parent = data.parents[*parent];
+  }
+
+  std::reverse(path.begin(), path.end());
+
+  return path;
+}
+
+template<typename T>
+Distances shortest_distances(AdjListWeight<T> graph, const std::string& start_id) {
+  return build_paths(graph, start_id).distances;
 }

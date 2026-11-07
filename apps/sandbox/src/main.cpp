@@ -21,54 +21,46 @@ void print_entity_name(const Entity& e) {
   std::cout << e.name << '\n';
 }
 
+using Graph = AdjListWeight<Entity>;
+
+class Temp {
+public:
+  Temp() {
+    std::cout << "Def constructed" << '\n';
+  }
+};
+
 int main() {
-  Entity e_a { 1, "A" };
-  Entity e_b { 2, "B" };
-  Entity e_c { 3, "C" };
-  Entity e_d { 4, "D" };
-  Entity e_e { 5, "E" };
-  Entity e_f { 6, "F" };
+  Graph g;
 
-  AdjList<Entity> al{};
-  al.add_nodes({ e_a, e_b, e_c, e_d, e_e, e_f });
+  auto ids = g.add_nodes({
+    Entity { 1, "foo" },
+    Entity { 2, "bar" },
+    Entity { 3, "baz" },
+    Entity { 4, "qux" },
+    Entity { 5, "wiz" },
+    Entity { 6, "kek" },
+    Entity { 7, "lol" }
+  });
 
-  al.add_edge(e_a, e_b);
-  al.add_edge(e_a, e_d);
+  g.add_edge(ids[0], ids[1], 6);
+  g.add_edge(ids[0], ids[2], 2);
+  g.add_edge(ids[1], ids[3], 3);
+  g.add_edge(ids[2], ids[1], 1);
+  g.add_edge(ids[2], ids[3], 5);
 
-  al.add_edge(e_b, e_c);
-  al.add_edge(e_b, e_d);
 
-  al.add_edge(e_c, e_f);
-
-  al.add_edge(e_d, e_e);
-
-  al.add_edge(e_e, e_f);
-
-  al.print();
-
-  std::cout << "BFS:" << '\n';
-  auto bfs_res = bfs(al, e_a, print_entity_name);
-  for (const auto index: bfs_res) {
-    std::cout << index << '\n';
+  auto path = shortest_path(g, ids[0], ids[3]);
+  for (const auto& node_id : path) {
+    std::cout << (*g.node(node_id)).value << '\n';
   }
 
-  std::cout << "Path: " << '\n';
-  auto path = shortest_path(al, e_a, e_f);
-  for (const auto& step : path) {
-    std::cout << al.get_node(step).value << '\n';
+  std::cout << "Distances from: " << (*g.node(ids[0])).value << '\n';
+  auto distances = shortest_distances(g, ids[0]);
+  for (const auto& [id, dist] : distances) {
+    auto node = g.node(id);
+    std::cout << '\t' << (*node).value << " - " << dist << '\n';
   }
-
-  // std::cout << "DFS Iter:" << '\n';
-  // auto dfs_res = dfs_iter(al, e1);
-  // for (const auto index: dfs_res) {
-  //   std::cout << index << '\n';
-  // }
-
-  // std::cout << "DFS Rec:" << '\n';
-  // auto dfs_rec_res = dfs(al, e1);
-  // for (const auto index: dfs_rec_res) {
-  //   std::cout << index << '\n';
-  // }
 
   return 0;
 }
