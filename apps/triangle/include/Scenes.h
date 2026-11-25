@@ -54,14 +54,11 @@ public:
 
     Mat4 model = Mat4::identity();
     model = Mat4::translation(Vector3{ 200, 200, 0.0 });
-    //   * Mat4::rotation_z(deg_to_rad(45))
-    //   * Mat4::scaling(Vector3 { 1.0, 1.0, 1.0 });
 
     Vector3 camera_pos { 0, 0, 0.5 };
     Vector3 camera_rotation { 0, 0, 0 };
     Mat4 view = Mat4::view(camera_pos, camera_rotation);
 
-    // viewport 1071, 800
     Mat4 proj = Mat4::ortho(0, 1071, 800, 0, 0.1, 100.0);
 
     program.setUniform("model", model);
@@ -69,6 +66,34 @@ public:
     program.setUniform("projection", proj);
 
     sprites.push_back(new Rectangle { 100 });
+  }
+};
+
+class CubeScene : public Scene {
+public:
+  CubeScene() {
+    glEnable(GL_DEPTH_TEST);
+
+    program.create("anim");
+    program.use();
+
+    Mat4 model = Mat4::identity();
+    model = Mat4::translation(Vector3{ 0, 0, 0 })
+      * Mat4::rotation_y(deg_to_rad(45))
+      * Mat4::rotation_z(deg_to_rad(45));
+
+    Vector3 camera_pos { 0, 0, 10 };
+    Vector3 camera_rotation { 0, 0, 0 };
+    Mat4 view = Mat4::view(camera_pos, camera_rotation);
+
+    float aspect = static_cast<float>(1071) / 800;
+    Mat4 proj = Mat4::perspective(deg_to_rad(60), aspect, 0.1f, 100.f);
+
+    program.setUniform("model", model);
+    program.setUniform("view", view);
+    program.setUniform("projection", proj);
+
+    sprites.push_back(new Cube { 1 });
   }
 };
 
@@ -81,22 +106,21 @@ public:
     program.use();
 
     Mat4 model = Mat4::identity();
-    model = Mat4::translation(Vector3{ 0, 0, 0 })
-      * Mat4::rotation_y(deg_to_rad(45));
-    //   * Mat4::scaling(Vector3 { 1.0, 1.0, 1.0 });
+    // model = Mat4::translation(Vector3{ 0, 0, 0 })
+    //   * Mat4::rotation_y(deg_to_rad(45))
+    //   * Mat4::rotation_z(deg_to_rad(45));
 
-    Vector3 camera_pos { 0, 0, 20 };
+    Vector3 camera_pos { 0, 0, 10 };
     Vector3 camera_rotation { 0, 0, 0 };
     Mat4 view = Mat4::view(camera_pos, camera_rotation);
 
-    // viewport 1071, 800
     float aspect = static_cast<float>(1071) / 800;
-    Mat4 proj = Mat4::perspective(deg_to_rad(45), aspect, 0.1f, 100.f);
+    Mat4 proj = Mat4::perspective(deg_to_rad(60), aspect, 0.1f, 100.f);
 
     program.setUniform("model", model);
     program.setUniform("view", view);
     program.setUniform("projection", proj);
 
-    sprites.push_back(new Rectangle { 5, 2 });
+    sprites.push_back(new Circle { 3 });
   }
 };
