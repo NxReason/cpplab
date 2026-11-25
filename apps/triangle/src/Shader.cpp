@@ -32,7 +32,7 @@ Shader::Shader(int type, const char* filepath)
   if (!success) {
     char info[512];
     glGetShaderInfoLog(id, 512, nullptr, info);
-    std::cerr << info << '\n';
+    std::cerr << "Shader compiling failed: " << info << '\n';
   }
 }
 
@@ -79,6 +79,18 @@ void ShaderProgram::create(Shader& vertex, Shader& fragment) {
 
   glDeleteShader(vertexId);
   glDeleteShader(fragmentId);
+
+  int success;
+  glGetProgramiv(id, GL_LINK_STATUS, &success);
+
+  if (!success) {
+    int log_length;
+    glGetProgramiv(id, GL_INFO_LOG_LENGTH, &log_length);
+
+    char info[512];
+    glGetProgramInfoLog(id, log_length, nullptr, info);
+    std::cerr << "Program linking failed: " << info << std::endl;
+  }
 }
 
 
@@ -98,7 +110,12 @@ void ShaderProgram::setUniforms(std::unordered_map<std::string, nxmath::Vector3>
   }
 }
 
-void ShaderProgram::setUniform(const std::string& name, const nxmath::Vector3 val) {
+void ShaderProgram::setUniform(const std::string& name, const nxmath::Vector3& val) {
   int location = glGetUniformLocation(id, name.c_str());
   glUniform3f(location, val.x, val.y, val.z);
+}
+
+void ShaderProgram::setUniform(const std::string& name, const nxmath::Mat4& mat) {
+  int location = glGetUniformLocation(id, name.c_str());
+  glUniformMatrix4fv(location, 1, GL_FALSE, mat.data());
 }

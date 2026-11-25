@@ -15,7 +15,7 @@ add_subdirectory(external/imgui)
 add_subdirectory(external/imgui_dock)
 add_subdirectory(external/glm)
 add_subdirectory(external/stb)
+# add_subdirectory(external/raylib)
 
 add_subdirectory(apps)
 add_subdirectory(lib)
-# add_subdirectory(include)

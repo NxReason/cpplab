@@ -1,5 +1,4 @@
 #include "graphics/GL.h"
-#include "app/Window.h"
 
 
 // Vertex Buffer
@@ -48,12 +47,17 @@ void VAO::bind() {
 }
 
 void VAO::attrib_layout(const std::vector<VertexAttribute>& layout) {
-  int stride = layout.size() * 3;
   int index = 0;
   long long offset = 0;
   for (const auto& attrib : layout) {
-    glVertexAttribPointer(index, attrib.size, attrib.type, GL_FALSE, stride, (void*)offset);
+    glVertexAttribPointer(index, attrib.size, attrib.type, GL_FALSE, attrib.stride, (void*)offset);
     glEnableVertexAttribArray(index++);
     offset += attrib.size * sizeof(float);
   }
+}
+
+template<>
+void VAO::enable_attribute<float>(int index, long long offset, int stride) {
+  glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+  glEnableVertexAttribArray(index);
 }

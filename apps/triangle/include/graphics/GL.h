@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <glad/glad.h>
 
 class VBO {
 public:
@@ -25,6 +26,7 @@ private:
 struct VertexAttribute {
   int size;
   int type;
+  int stride;
 };
 
 class VAO {
@@ -32,6 +34,11 @@ public:
   VAO();
   void bind();
   void attrib_layout(const std::vector<VertexAttribute>& layout);
+
+  template<typename T>
+  void enable_attribute(int index = 0, long long offset = 0, int stride = 3 * sizeof(float));
+
+  unsigned int get_id() const { return id; }
 private:
   unsigned int id;
 };

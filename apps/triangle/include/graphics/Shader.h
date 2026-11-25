@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include "Vector.h"
+#include "Mat4.h"
 
 class Shader {
 public:
@@ -30,7 +31,8 @@ public:
   void use();
 
   void setUniforms(std::unordered_map<std::string, nxmath::Vector3> unis);
-  void setUniform(const std::string& name, nxmath::Vector3 value);
+  void setUniform(const std::string& name, const nxmath::Vector3& value);
+  void setUniform(const std::string& name, const nxmath::Mat4& value);
 private:
   unsigned int id;
 };
