@@ -18,6 +18,7 @@ void Scene::render() {
 
 void Scene::set_viewport(const Viewport& viewport) {
   glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+  this->viewport = viewport;
 }
 
 void Scene::set_polygon_mode(bool is_on) {

@@ -84,7 +84,20 @@ public:
     : Rectangle { { 0, 0 }, .25, .25 } {}
 
   Rectangle(Vector3 center, float side_length) 
-    : Rectangle { center, side_length, side_length } {}
+    : Rectangle { center, side_length / 2, side_length / 2 } {}
+
+  Rectangle(float side_length)
+    : Rectangle {
+      Vector3 { 0, 0 }
+      , side_length / 2
+      , side_length / 2 } {} 
+
+  Rectangle(float width, float height)
+    : Rectangle {
+      Vector3 { 0, 0 },
+      width / 2,
+      height / 2
+    } {}
 
   std::vector<float> get_coords() const override {
     return {
